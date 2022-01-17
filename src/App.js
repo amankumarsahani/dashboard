@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Chart1 from "./components/charts/Chart1.js";
+import Chart2 from "./components/charts/Chart2.js";
+import Chart3 from "./components/charts/Chart3.js";
+import Chart4 from "./components/charts/Chart4.js";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div>Data Analysis</div>
+        <div>About</div>
       </header>
+      <div className="graphHolder">
+        <div className="graph">
+          <Chart1></Chart1>
+        </div>
+        <div className="graph">
+          <Chart2></Chart2>
+        </div>
+        <div className="graph">
+          <Chart3></Chart3>
+        </div>
+        <div className="graph">
+          <Chart4></Chart4>
+        </div>
+      </div>
     </div>
   );
 }
