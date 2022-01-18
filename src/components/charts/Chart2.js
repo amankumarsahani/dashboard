@@ -9,6 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import Loading from "./Loading.js";
 
 ChartJS.register(
   CategoryScale,
@@ -21,15 +22,6 @@ ChartJS.register(
 
 export const options = {
   responsive: true,
-  plugins: {
-    legend: {
-      position: "top",
-    },
-    title: {
-      display: true,
-      text: "Bar Chart",
-    },
-  },
   scales: {
     y: {
       type: "linear",
@@ -47,28 +39,32 @@ export const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Temperature",
-      data: labels.map(() => Math.floor(Math.random() * 100 - 10)),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      yAxisID: "y",
-    },
-    {
-      label: "Humidity",
-      data: labels.map(() => Math.floor(Math.random() * 10)),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      yAxisID: "y1",
-    },
-  ],
-};
-
-export default function App() {
-  return <Bar options={options} data={data} />;
+export default function Chart2({ data }) {
+  if (data) {
+    let labels = data.dataLabels;
+    return (
+      <Bar
+        options={options}
+        data={{
+          labels,
+          datasets: [
+            {
+              label: "Temperature ºC",
+              data: data.data.temp,
+              borderColor: "rgb(255, 99, 132)",
+              backgroundColor: "rgb(255, 99, 132)",
+              yAxisID: "y",
+            },
+            {
+              label: "Humidity",
+              data: data.data.humi,
+              borderColor: "rgb(53, 162, 235)",
+              backgroundColor: "rgb(53, 162, 235)",
+              yAxisID: "y1",
+            },
+          ],
+        }}
+      />
+    );
+  } else return <Loading />;
 }
