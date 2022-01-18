@@ -1,36 +1,84 @@
-import React from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import Loading from "./Loading.js";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-export const data = {
-  labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-  datasets: [
-    {
-      label: "# of Votes",
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-        "rgba(255, 159, 64, 0.2)",
-      ],
-      borderColor: [
-        "rgba(255, 99, 132, 1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-        "rgba(75, 192, 192, 1)",
-        "rgba(153, 102, 255, 1)",
-        "rgba(255, 159, 64, 1)",
-      ],
-      borderWidth: 1,
+export const options = {
+  responsive: true,
+  interaction: {
+    mode: "index",
+    intersect: false,
+  },
+  stacked: false,
+
+  scales: {
+    y: {
+      type: "linear",
+      display: true,
+      position: "left",
     },
-  ],
+  },
 };
 
-export default function App() {
-  return <Pie options={{ maintainAspectRatio: false }} data={data} />;
+export default function Chart1({ data }) {
+  if (data) {
+    let labels = data.dataLabels;
+
+    return (
+      <Line
+        options={options}
+        data={{
+          labels,
+          datasets: [
+            {
+              label: "PM 10",
+              data: data.data.pm10,
+              borderColor: "rgb(255, 99, 132)",
+              backgroundColor: "rgb(255, 99, 132)",
+              yAxisID: "y",
+            },
+            {
+              label: "PM 25",
+              data: data.data.pm25,
+              borderColor: "rgb(53, 162, 235)",
+              backgroundColor: "rgb(53, 162, 235)",
+              yAxisID: "y",
+            },
+            {
+              label: "PM 40",
+              data: data.data.pm40,
+              borderColor: "#16a085",
+              backgroundColor: "#16a085",
+              yAxisID: "y",
+            },
+            {
+              label: "PM 100",
+              data: data.data.pm100,
+              borderColor: "#16a085",
+              backgroundColor: "#16a085",
+              yAxisID: "y",
+            },
+          ],
+        }}
+      />
+    );
+  } else return <Loading />;
 }
