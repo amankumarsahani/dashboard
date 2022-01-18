@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import Loading from "./Loading.js";
 
 ChartJS.register(
   CategoryScale,
@@ -28,53 +28,50 @@ export const options = {
     intersect: false,
   },
   stacked: false,
-  plugins: {
-    title: {
-      display: true,
-      text: "Line Chart",
-    },
-  },
+
   scales: {
     y: {
       type: "linear",
       display: true,
       position: "left",
     },
-    y1: {
-      type: "linear",
-      display: true,
-      position: "right",
-      grid: {
-        drawOnChartArea: false,
-      },
-    },
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+export default function Chart1({ data }) {
+  if (data) {
+    let labels = data.dataLabels;
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Temperature",
-      data: labels.map(() => labels.map(() => Math.floor(Math.random() * 100))),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      yAxisID: "y",
-    },
-    {
-      label: "Humidity",
-      data: labels.map(() =>
-        labels.map(() => Math.floor(Math.random() * 40 - 20))
-      ),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      yAxisID: "y1",
-    },
-  ],
-};
-
-export default function App() {
-  return <Line options={options} data={data} />;
+    return (
+      <Line
+        options={options}
+        data={{
+          labels,
+          datasets: [
+            {
+              label: "X-Axis",
+              data: data.dataX,
+              borderColor: "rgb(255, 99, 132)",
+              backgroundColor: "rgb(255, 99, 132)",
+              yAxisID: "y",
+            },
+            {
+              label: "Y-Axis",
+              data: data.dataY,
+              borderColor: "rgb(53, 162, 235)",
+              backgroundColor: "rgb(53, 162, 235)",
+              yAxisID: "y",
+            },
+            {
+              label: "Z-Axis",
+              data: data.dataZ,
+              borderColor: "#16a085",
+              backgroundColor: "#16a085",
+              yAxisID: "y",
+            },
+          ],
+        }}
+      />
+    );
+  } else return <Loading />;
 }
