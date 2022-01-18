@@ -41,7 +41,9 @@
         ]
     },
     "devDependencies": {
+        "axios": "^0.25.0",
         "gh-pages": "^3.2.3",
-        "mini-css-extract-plugin": "2.4.5"
+        "mini-css-extract-plugin": "2.4.5",
+        "react-loading": "^2.0.3"
     }
 }
