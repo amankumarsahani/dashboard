@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import Loading from "./Loading.js";
+import Loading from "../Loading.js";
 
 ChartJS.register(
   CategoryScale,
@@ -28,7 +28,12 @@ export const options = {
     intersect: false,
   },
   stacked: false,
-
+  plugins: {
+    title: {
+      display: true,
+      text: "Accelerometer",
+    },
+  },
   scales: {
     y: {
       type: "linear",

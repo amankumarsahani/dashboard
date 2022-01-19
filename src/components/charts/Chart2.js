@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import Loading from "./Loading.js";
+import Loading from "../Loading.js";
 
 ChartJS.register(
   CategoryScale,
@@ -22,6 +22,12 @@ ChartJS.register(
 
 export const options = {
   responsive: true,
+  plugins: {
+    title: {
+      display: true,
+      text: "Temperature and Humidity",
+    },
+  },
   scales: {
     y: {
       type: "linear",
