@@ -1,46 +1,68 @@
-import React from "react";
 import {
   Chart as ChartJS,
+  CategoryScale,
   LinearScale,
   PointElement,
+  LineElement,
+  Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bubble } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
+import Loading from "../Loading.js";
 
-ChartJS.register(LinearScale, PointElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export const options = {
+  responsive: true,
+  interaction: {
+    mode: "index",
+    intersect: false,
+  },
+  stacked: false,
+  plugins: {
+    title: {
+      display: true,
+      text: "Carbon Dioxide Levels",
+    },
+  },
   scales: {
     y: {
-      beginAtZero: true,
+      type: "linear",
+      display: true,
+      position: "left",
     },
   },
 };
 
-export const data = {
-  datasets: [
-    {
-      label: "Red dataset",
-      data: Array.from({ length: 50 }, () => ({
-        x: Math.floor(Math.random() * 200 - 200),
-        y: Math.floor(Math.random() * 200 - 200),
-        r: Math.floor(Math.random() * 15 + 5),
-      })),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Blue dataset",
-      data: Array.from({ length: 50 }, () => ({
-        x: Math.floor(Math.random() * 200 - 200),
-        y: Math.floor(Math.random() * 200 - 200),
-        r: Math.floor(Math.random() * 15 + 5),
-      })),
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
+export default function Chart3({ data }) {
+  if (data) {
+    let labels = data.dataLabels;
 
-export default function App() {
-  return <Bubble options={options} data={data} />;
+    return (
+      <Bar
+        options={options}
+        data={{
+          labels,
+          datasets: [
+            {
+              label: "CO\u2082",
+              data: data.data.co2,
+              borderColor: "rgb(255, 99, 132)",
+              backgroundColor: "rgb(255, 99, 132)",
+              yAxisID: "y",
+            },
+          ],
+        }}
+      />
+    );
+  } else return <Loading />;
 }
