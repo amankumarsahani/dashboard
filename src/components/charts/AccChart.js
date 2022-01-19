@@ -22,6 +22,8 @@ ChartJS.register(
 );
 
 export const options = {
+  maintainAspectRatio: false,
+
   responsive: true,
   interaction: {
     mode: "index",
@@ -31,7 +33,7 @@ export const options = {
   plugins: {
     title: {
       display: true,
-      text: "Particulate Matter",
+      text: "Accelerometer",
     },
   },
   scales: {
@@ -39,14 +41,17 @@ export const options = {
       type: "linear",
       display: true,
       position: "left",
+      grid: {
+        color: "#FFFFFF11",
+      },
     },
   },
 };
 
-export default function Chart4({ data }) {
+export default function AccChart({ data }) {
   if (data) {
     let labels = data.dataLabels;
-
+    const tension = 0.3;
     return (
       <Line
         options={options}
@@ -54,32 +59,37 @@ export default function Chart4({ data }) {
           labels,
           datasets: [
             {
-              label: "PM 10",
-              data: data.data.pm10,
+              label: "X-Axis",
+              data: data.dataX,
               borderColor: "rgb(255, 99, 132)",
               backgroundColor: "rgb(255, 99, 132)",
               yAxisID: "y",
+              tension: tension,
             },
             {
-              label: "PM 25",
-              data: data.data.pm25,
+              label: "Y-Axis",
+              data: data.dataY,
               borderColor: "rgb(53, 162, 235)",
               backgroundColor: "rgb(53, 162, 235)",
               yAxisID: "y",
+              tension: tension,
             },
             {
-              label: "PM 40",
-              data: data.data.pm40,
+              label: "Z-Axis",
+              data: data.dataZ,
               borderColor: "#16a085",
               backgroundColor: "#16a085",
               yAxisID: "y",
+              tension: tension,
             },
             {
-              label: "PM 100",
-              data: data.data.pm100,
+              type: "bar",
+              label: "Magnitude",
+              data: data.abs,
               borderColor: "#8e44ad",
               backgroundColor: "#8e44ad",
               yAxisID: "y",
+              tension: tension,
             },
           ],
         }}

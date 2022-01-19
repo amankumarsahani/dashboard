@@ -1,8 +1,6 @@
 import "./App.css";
-import Chart1 from "../components/charts/Chart1.js";
-import Chart2 from "../components/charts/Chart2.js";
-import Chart3 from "../components/charts/Chart3.js";
-import Chart4 from "../components/charts/Chart4.js";
+import TempChart from "../components/charts/TempChart.js";
+import AccChart from "../components/charts/AccChart.js";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Dropdown from "../components/Dropdown.js";
@@ -74,14 +72,12 @@ function App() {
         </div>
         <div id="g2" className="graph"></div>
         <div id="g3" className="graph">
-          <Chart1 data={tempData}></Chart1>
+          <TempChart data={tempData}></TempChart>
         </div>
         <div id="g4" className="graph">
-          <Chart3 data={accData}></Chart3>
+          <AccChart data={accData}></AccChart>
         </div>
-        <div id="g5" className="graph">
-          {/* <Chart4 data={tempData}></Chart4> */}
-        </div>
+        <div id="g5" className="graph"></div>
       </div>
     </div>
   );

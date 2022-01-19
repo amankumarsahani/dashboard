@@ -1,9 +1,9 @@
-import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
@@ -14,18 +14,39 @@ import Loading from "../Loading.js";
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend
 );
 
 export const options = {
+  maintainAspectRatio: false,
+
   responsive: true,
+  interaction: {
+    mode: "index",
+    intersect: false,
+  },
+  stacked: false,
   plugins: {
     title: {
       display: true,
-      text: "Temperature and Humidity",
+      text: "Temperature",
+    },
+    legend: {
+      display: false,
+    },
+  },
+  tooltips: {
+    filter: function (tooltipItem, data) {
+      var label = data.labels[tooltipItem.index];
+      if (label == "Temperature") {
+        return false;
+      } else {
+        return true;
+      }
     },
   },
   scales: {
@@ -33,21 +54,17 @@ export const options = {
       type: "linear",
       display: true,
       position: "left",
-    },
-    y1: {
-      type: "linear",
-      display: true,
-      position: "right",
       grid: {
-        drawOnChartArea: false,
+        color: "#FFFFFF11",
       },
     },
   },
 };
 
-export default function Chart2({ data }) {
+export default function TempChart({ data }) {
   if (data) {
     let labels = data.dataLabels;
+
     return (
       <Bar
         options={options}
@@ -55,18 +72,11 @@ export default function Chart2({ data }) {
           labels,
           datasets: [
             {
-              label: "Temperature ºC",
-              data: data.data.temp,
-              borderColor: "rgb(255, 99, 132)",
-              backgroundColor: "rgb(255, 99, 132)",
+              label: "Temperature",
+              data: data.temp,
+              borderColor: "rgba(255, 99, 132, 0.5)",
+              backgroundColor: "rgba(255, 99, 132, 0.5)",
               yAxisID: "y",
-            },
-            {
-              label: "Humidity",
-              data: data.data.humi,
-              borderColor: "rgb(53, 162, 235)",
-              backgroundColor: "rgb(53, 162, 235)",
-              yAxisID: "y1",
             },
           ],
         }}
