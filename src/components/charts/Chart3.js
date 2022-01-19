@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import Loading from "../Loading.js";
 
 ChartJS.register(
@@ -22,6 +22,8 @@ ChartJS.register(
 );
 
 export const options = {
+  maintainAspectRatio: false,
+
   responsive: true,
   interaction: {
     mode: "index",
@@ -31,7 +33,7 @@ export const options = {
   plugins: {
     title: {
       display: true,
-      text: "Carbon Dioxide Levels",
+      text: "Accelerometer",
     },
   },
   scales: {
@@ -39,26 +41,55 @@ export const options = {
       type: "linear",
       display: true,
       position: "left",
+      grid: {
+        color: "#FFFFFF11",
+      },
     },
   },
 };
 
-export default function Chart3({ data }) {
+export default function Chart1({ data }) {
   if (data) {
     let labels = data.dataLabels;
-
+    const tension = 0.3;
     return (
-      <Bar
+      <Line
         options={options}
         data={{
           labels,
           datasets: [
             {
-              label: "CO\u2082",
-              data: data.data.co2,
+              label: "X-Axis",
+              data: data.dataX,
               borderColor: "rgb(255, 99, 132)",
               backgroundColor: "rgb(255, 99, 132)",
               yAxisID: "y",
+              tension: tension,
+            },
+            {
+              label: "Y-Axis",
+              data: data.dataY,
+              borderColor: "rgb(53, 162, 235)",
+              backgroundColor: "rgb(53, 162, 235)",
+              yAxisID: "y",
+              tension: tension,
+            },
+            {
+              label: "Z-Axis",
+              data: data.dataZ,
+              borderColor: "#16a085",
+              backgroundColor: "#16a085",
+              yAxisID: "y",
+              tension: tension,
+            },
+            {
+              type: "bar",
+              label: "Magnitude",
+              data: data.abs,
+              borderColor: "#8e44ad",
+              backgroundColor: "#8e44ad",
+              yAxisID: "y",
+              tension: tension,
             },
           ],
         }}
