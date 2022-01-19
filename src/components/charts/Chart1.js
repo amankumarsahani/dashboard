@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import Loading from "../Loading.js";
 
 ChartJS.register(
@@ -22,6 +22,8 @@ ChartJS.register(
 );
 
 export const options = {
+  maintainAspectRatio: false,
+
   responsive: true,
   interaction: {
     mode: "index",
@@ -31,7 +33,7 @@ export const options = {
   plugins: {
     title: {
       display: true,
-      text: "Accelerometer",
+      text: "Carbon Dioxide Levels",
     },
   },
   scales: {
@@ -39,39 +41,36 @@ export const options = {
       type: "linear",
       display: true,
       position: "left",
+      grid: {
+        color: "#FFFFFF11",
+      },
     },
   },
 };
 
-export default function Chart1({ data }) {
+export default function Chart3({ data }) {
   if (data) {
     let labels = data.dataLabels;
 
     return (
-      <Line
+      <Bar
         options={options}
         data={{
           labels,
           datasets: [
             {
-              label: "X-Axis",
-              data: data.dataX,
-              borderColor: "rgb(255, 99, 132)",
-              backgroundColor: "rgb(255, 99, 132)",
+              label: "Temperature",
+              data: data.temp,
+              borderColor: "rgba(255, 99, 132, 0.5)",
+              backgroundColor: "rgba(255, 99, 132, 0.5)",
               yAxisID: "y",
             },
             {
-              label: "Y-Axis",
-              data: data.dataY,
+              type: "line",
+              label: "Temperature",
+              data: data.temp,
               borderColor: "rgb(53, 162, 235)",
               backgroundColor: "rgb(53, 162, 235)",
-              yAxisID: "y",
-            },
-            {
-              label: "Z-Axis",
-              data: data.dataZ,
-              borderColor: "#16a085",
-              backgroundColor: "#16a085",
               yAxisID: "y",
             },
           ],
