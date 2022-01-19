@@ -31,7 +31,7 @@ function NavItem(props) {
 
   return (
     <li className="nav-item">
-      <a href="/#" className="icon-button" onClick={() => setOpen(!open)}>
+      <a href="#" className="icon-button" onClick={() => setOpen(!open)}>
         {props.icon}
       </a>
 
@@ -57,7 +57,7 @@ function DropdownMenu() {
   function DropdownItem(props) {
     return (
       <a
-        href="/#"
+        href="#"
         className="menu-item"
         onClick={() => props.goToMenu && setActiveMenu(props.goToMenu)}
       >
