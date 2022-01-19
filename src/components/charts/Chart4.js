@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import Loading from "./Loading.js";
+import Loading from "../Loading.js";
 
 ChartJS.register(
   CategoryScale,
@@ -28,7 +28,12 @@ export const options = {
     intersect: false,
   },
   stacked: false,
-
+  plugins: {
+    title: {
+      display: true,
+      text: "Particulate Matter",
+    },
+  },
   scales: {
     y: {
       type: "linear",
@@ -38,7 +43,7 @@ export const options = {
   },
 };
 
-export default function Chart1({ data }) {
+export default function Chart4({ data }) {
   if (data) {
     let labels = data.dataLabels;
 
@@ -72,8 +77,8 @@ export default function Chart1({ data }) {
             {
               label: "PM 100",
               data: data.data.pm100,
-              borderColor: "#16a085",
-              backgroundColor: "#16a085",
+              borderColor: "#8e44ad",
+              backgroundColor: "#8e44ad",
               yAxisID: "y",
             },
           ],
