@@ -41,9 +41,11 @@
         ]
     },
     "devDependencies": {
+        "animated-number-react": "^0.1.2",
         "axios": "^0.25.0",
         "gh-pages": "^3.2.3",
         "mini-css-extract-plugin": "2.4.5",
-        "react-loading": "^2.0.3"
+        "react-loading": "^2.0.3",
+        "react-transition-group": "^4.4.2"
     }
 }
