@@ -7,13 +7,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Dropdown from "../components/Dropdown.js";
 import Refresh from "../icons/refresh.png";
+import DeviceCounter from "../components/DeviceCounter.js";
 
 function App() {
   const url =
     "https://rtvab1na8b.execute-api.us-west-2.amazonaws.com/default/fetchDynamoDBdata";
   const [refresh, setRefresh] = useState(false);
   const [accData, setAccData] = useState(null);
-  const [airData, setAiData] = useState(null);
+  const [tempData, setTempData] = useState(null);
 
   useEffect(() => {
     const loop = false;
@@ -22,7 +23,7 @@ function App() {
       const intervalId = setInterval(() => {
         axios.get(url).then((response) => {
           setAccData(makeAccData(response.data.acc));
-          setAiData(makeAirData(response.data.air));
+          setTempData(makeTempData(response.data.temp));
         });
       }, interval);
       return () => {
@@ -31,7 +32,7 @@ function App() {
     } else {
       axios.get(url).then((response) => {
         setAccData(makeAccData(response.data.acc));
-        setAiData(makeAirData(response.data.air));
+        setTempData(makeTempData(response.data.temp));
       });
     }
   }, [refresh]);
@@ -51,24 +52,35 @@ function App() {
             }}
             onClick={() => {
               setRefresh(!refresh);
-              console.log(refresh);
+              console.log("refreshed");
             }}
           ></img>
           <Dropdown />
         </div>
       </header>
       <div className="graphHolder">
-        <div className="graph">
-          <Chart1 data={accData}></Chart1>
+        <div id="g1" className="graph">
+          <span id="counterText1">Accelerometer Sensors</span>
+          <div id="counter1">
+            <DeviceCounter data={accData && accData.dataLabels.length} />
+          </div>
+          <span id="counterText2">Temperature Sensors</span>
+          <div id="counter2">
+            <DeviceCounter
+              id="counter2"
+              data={tempData && tempData.dataLabels.length}
+            />
+          </div>
         </div>
-        <div className="graph">
-          <Chart2 data={airData}></Chart2>
+        <div id="g2" className="graph"></div>
+        <div id="g3" className="graph">
+          <Chart1 data={tempData}></Chart1>
         </div>
-        <div className="graph">
-          <Chart3 data={airData}></Chart3>
+        <div id="g4" className="graph">
+          <Chart3 data={accData}></Chart3>
         </div>
-        <div className="graph">
-          <Chart4 data={airData}></Chart4>
+        <div id="g5" className="graph">
+          {/* <Chart4 data={tempData}></Chart4> */}
         </div>
       </div>
     </div>
@@ -78,57 +90,41 @@ function App() {
 export default App;
 
 function makeAccData(arr) {
-  arr.sort((a, b) => timeDateSorter(a, b, "TimestampUTC"));
+  arr.sort((a, b) => timeDateSorter(a, b, "time_stmp"));
   let dataLabels = [];
   let dataX = [];
   let dataY = [];
   let dataZ = [];
+  let abs = [];
   console.log(arr.length);
   for (let i = 0; i < arr.length; i++) {
-    //time axis
-    dataLabels.push(toDate(arr[i].TimestampUTC).toLocaleDateString("en-IN"));
-    let val = arr[i].Value;
-    let x = val.substring(6, 8) + val.substring(4, 6);
-    let y = val.substring(10, 12) + val.substring(8, 10);
-    let z = val.substring(14, 16) + val.substring(12, 14);
-    x = signedHexToDec(parseInt(x, 16)) * 0.00245;
-    y = signedHexToDec(parseInt(y, 16)) * 0.00245;
-    z = signedHexToDec(parseInt(z, 16)) * 0.00245;
-    dataX.push(x);
-    dataY.push(y);
-    dataZ.push(z);
+    dataLabels.push(arr[i].DeviceID);
+    dataX.push(arr[i].X_axis);
+    dataY.push(arr[i].Y_axis);
+    dataZ.push(arr[i].Z_axis);
+    let x = Math.pow(
+      Math.pow(arr[i].X_axis, 2) +
+        Math.pow(arr[i].Y_axis, 2) +
+        Math.pow(arr[i].Z_axis, 2),
+      0.5
+    );
+    abs.push(x);
   }
-  return { dataLabels, dataX, dataY, dataZ };
+  return { dataLabels, dataX, dataY, dataZ, abs };
 }
 
-function makeAirData(arr) {
-  arr.sort((a, b) => timeDateSorter(a, b, "TimeStamp"));
+function makeTempData(arr) {
+  arr.sort((a, b) => timeDateSorter(a, b, "time_stmp"));
   let dataLabels = [];
-  let data = {
-    temp: [],
-    humi: [],
-    pm10: [],
-    pm25: [],
-    pm40: [],
-    pm100: [],
-    co2: [],
-  };
+  let temp = [];
+  console.log(arr.length);
   for (let i = 0; i < arr.length; i++) {
-    //time axis
-    dataLabels.push(toDate(arr[i].TimeStamp).toLocaleDateString("en-IN"));
-
-    //data for Chart 2
-    data.temp.push(Math.abs(arr[i].Temperature) > 100 ? 0 : arr[i].Temperature);
-    data.humi.push(Math.abs(arr[i].Humidity) > 100 ? 0 : arr[i].Humidity);
-
-    //data for Chart 3 and Chart 4
-    data.pm10.push(arr[i].PM10 > 100 ? 0 : arr[i].PM10);
-    data.pm25.push(arr[i].PM25 > 100 ? 0 : arr[i].PM25);
-    data.pm40.push(arr[i].PM40 > 100 ? 0 : arr[i].PM40);
-    data.pm100.push(arr[i].PM100 > 100 ? 0 : arr[i].PM100);
-    data.co2.push(Math.abs(arr[i].CO2) > 100000 ? 0 : arr[i].CO2);
+    dataLabels.push(arr[i].DeviceID);
+    temp.push(
+      Math.abs(arr[i].Temperature_degC) > 100 ? 0 : arr[i].Temperature_degC
+    );
   }
-  return { dataLabels, data };
+  return { dataLabels, temp };
 }
 
 function toDate(a) {
@@ -145,8 +141,4 @@ function timeDateSorter(_a, _b, key) {
   if (p < q) return -1;
   else if (p > q) return 1;
   return 0;
-}
-
-function signedHexToDec(sigHex) {
-  return -(sigHex & 0x8000) | (sigHex & 0x7fff);
 }
