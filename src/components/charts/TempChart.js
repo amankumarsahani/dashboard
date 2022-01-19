@@ -44,7 +44,7 @@ export const options = {
   tooltips: {
     filter: function (tooltipItem, data) {
       var label = data.labels[tooltipItem.index];
-      if (label == "Temperature") {
+      if (label === "Temperature") {
         return false;
       } else {
         return true;
