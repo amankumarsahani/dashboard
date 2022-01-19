@@ -1,6 +1,6 @@
 import "./App.css";
 import TempChart from "../components/charts/TempChart.js";
-import AccChart from "../components/charts/AccChart.js";
+import AccData from "../components/charts/AccData.js";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Dropdown from "../components/Dropdown.js";
@@ -58,11 +58,11 @@ function App() {
       </header>
       <div className="graphHolder">
         <div id="g1" className="graph">
-          <span id="counterText1">Accelerometer Sensors</span>
+          <span id="counterText1">Active Accelerometer Sensors</span>
           <div id="counter1">
             <DeviceCounter data={accData && accData.dataLabels.length} />
           </div>
-          <span id="counterText2">Temperature Sensors</span>
+          <span id="counterText2">Active Temperature Sensors</span>
           <div id="counter2">
             <DeviceCounter
               id="counter2"
@@ -75,7 +75,7 @@ function App() {
           <TempChart data={tempData}></TempChart>
         </div>
         <div id="g4" className="graph">
-          <AccChart data={accData}></AccChart>
+          <AccData data={accData}></AccData>
         </div>
         <div id="g5" className="graph"></div>
       </div>

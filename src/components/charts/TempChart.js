@@ -4,6 +4,7 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -16,6 +17,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
@@ -42,7 +44,7 @@ export const options = {
   tooltips: {
     filter: function (tooltipItem, data) {
       var label = data.labels[tooltipItem.index];
-      if (label === "Temperature") {
+      if (label == "Temperature") {
         return false;
       } else {
         return true;
