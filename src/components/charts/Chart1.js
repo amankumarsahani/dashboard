@@ -33,7 +33,20 @@ export const options = {
   plugins: {
     title: {
       display: true,
-      text: "Carbon Dioxide Levels",
+      text: "Temperature",
+    },
+    legend: {
+      display: false,
+    },
+  },
+  tooltips: {
+    filter: function (tooltipItem, data) {
+      var label = data.labels[tooltipItem.index];
+      if (label == "Temperature") {
+        return false;
+      } else {
+        return true;
+      }
     },
   },
   scales: {
@@ -67,7 +80,7 @@ export default function Chart3({ data }) {
             },
             {
               type: "line",
-              label: "Temperature",
+              label: "",
               data: data.temp,
               borderColor: "rgb(53, 162, 235)",
               backgroundColor: "rgb(53, 162, 235)",
