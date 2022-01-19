@@ -37,7 +37,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div>Data Analysis</div>
+        <div>SENSOR &nbsp; NODE &nbsp; NETWORK</div>
         <div className="Options">
           <img
             id="refresh"
