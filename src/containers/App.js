@@ -25,11 +25,9 @@ function App() {
     dataZ: "line",
     abs: "bar",
   };
-  const body = document.getElementsByClassName("App");
   const changeTheme = () => {
     setTheme(!theme);
   };
-
   const handleIntervalChange = (e) => {
     setInterv(e.target.value);
   };
