@@ -36,6 +36,9 @@ export const options = {
     title: {
       display: true,
       text: "Temperature",
+      font: {
+        size: 18,
+      },
     },
     legend: {
       display: false,

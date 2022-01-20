@@ -34,6 +34,9 @@ export const options = {
     title: {
       display: true,
       text: "Accelerometer",
+      font: {
+        size: 18,
+      },
     },
   },
   scales: {
@@ -48,7 +51,32 @@ export const options = {
   },
 };
 
-export default function AccChart({ data }) {
+export default function AccChart({ data, type }) {
+  if (type === undefined) {
+    type = {
+      dataX: "line",
+      dataY: "line",
+      dataZ: "line",
+      abs: "bar",
+    };
+  } else {
+    if (data && data.dataLabels.length === 1) {
+      type = {
+        dataX: "bar",
+        dataY: "bar",
+        dataZ: "bar",
+        abs: "bar",
+      };
+    } else {
+      type = {
+        dataX: "line",
+        dataY: "line",
+        dataZ: "line",
+        abs: "bar",
+      };
+    }
+  }
+
   if (data) {
     let labels = data.dataLabels;
     const tension = 0.3;
@@ -59,6 +87,7 @@ export default function AccChart({ data }) {
           labels,
           datasets: [
             {
+              type: type.dataX,
               label: "X-Axis",
               data: data.dataX,
               borderColor: "rgb(255, 99, 132)",
@@ -67,6 +96,7 @@ export default function AccChart({ data }) {
               tension: tension,
             },
             {
+              type: type.dataY,
               label: "Y-Axis",
               data: data.dataY,
               borderColor: "rgb(53, 162, 235)",
@@ -75,6 +105,7 @@ export default function AccChart({ data }) {
               tension: tension,
             },
             {
+              type: type.dataZ,
               label: "Z-Axis",
               data: data.dataZ,
               borderColor: "#16a085",
@@ -83,7 +114,7 @@ export default function AccChart({ data }) {
               tension: tension,
             },
             {
-              type: "bar",
+              type: type.abs,
               label: "Magnitude",
               data: data.abs,
               borderColor: "#8e44ad",
