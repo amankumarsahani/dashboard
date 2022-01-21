@@ -80,7 +80,7 @@ export default function AccChart({ data, type, theme }) {
     dataX: "rgb(255, 99, 132)",
     dataY: "rgb(53, 162, 235)",
     dataZ: "#16a085",
-    mag: theme ? "#e056fd" : "#686de0",
+    mag: theme ? "rgb(153, 102, 255)" : "#686de0",
   };
 
   if (data) {
