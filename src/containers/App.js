@@ -66,16 +66,17 @@ function App() {
       </header>
       <div className="graphHolder">
         <div id="g1" className="graph">
-          <span id="counterText1">Active Accelerometer Sensors</span>
-          <div id="counter1">
-            <DeviceCounter data={accData && accData.dataLabels.length} />
+          <div className="counterDiv">
+            <span className="counterText">Active Accelerometer Sensors</span>
+            <div className="counter">
+              <DeviceCounter data={accData && accData.dataLabels.length} />
+            </div>
           </div>
-          <span id="counterText2">Active Temperature Sensors</span>
-          <div id="counter2">
-            <DeviceCounter
-              id="counter2"
-              data={tempData && tempData.dataLabels.length}
-            />
+          <div className="counterDiv">
+            <span className="counterText">Active Temperature Sensors</span>
+            <div className="counter">
+              <DeviceCounter data={tempData && tempData.dataLabels.length} />
+            </div>
           </div>
         </div>
         <div id="g2" className="graph">
