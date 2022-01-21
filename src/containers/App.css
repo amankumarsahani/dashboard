@@ -4,33 +4,58 @@
     --c2: #282c34;
     --c3: #00c3ff;
     --c4: #16a085;
-    --c5: #c3eae1;
-    --c6: #218c74;
-    --c7: #454e56;
-    --c8: #000;
+    --c5: #fff;
+    --c6: rgb(222 231 253);
+    --c7: #000;
+    --c8: #454e56;
+    --h1: #121418;
+    --h2: rgb(130 156 249);
     --faint: #ffffff11;
     --theme-icon: url("../icons/sun.svg");
     --theme-icon-color: #f39c12;
+    --placeholder: 22, 160, 133;
+    --alpha: 0.8;
+    --glass: 0, 0, 0;
+    --dropdown: rgb(69, 97, 197);
+    --refresh-invert: 48%;
+    --refresh-hue-rotate: 171deg;
+    --refersh-counter: lime;
 }
 
 .dark {
     --bg: var(--c1);
     --bg-dull: var(--c2);
+    --bg-sharp: var(--h1);
     --text: var(--c3);
     --text-dull: var(--c4);
+    --header-text: var(--c3);
     --faint: #504b4b11;
     --theme-icon: url("../icons/sun.svg");
     --theme-icon-color: #f39c12;
+    --placeholder: 22, 160, 133;
+    --glass: 0, 0, 0;
+    --dropdown: var(--bg-dull);
+    --refresh-invert: 48%;
+    --refresh-hue-rotate: 171deg;
+    --refersh-counter: var(--c4);
 }
 
 .light {
     --bg: var(--c5);
     --bg-dull: var(--c6);
+    --bg-sharp: var(--h2);
     --text: var(--c7);
-    --text-dull: var(--c8);
+    --text-dull: var(--c4);
+    --header-text: var(--c5);
     --faint: #00000011;
     --theme-icon: url("../icons/moon.svg");
-    --theme-icon-color: var(--c7);
+    --theme-icon-color: #d8d8d8;
+    --placeholder: 69, 78, 86;
+    --glass: 255, 255, 255;
+    --dropdown: rgb(69, 97, 197);
+    --refresh-invert: 90%;
+    --refresh-hue-rotate: 100deg;
+    --refersh-counter: #00bb3b;
 }
 
 .App {
@@ -44,13 +69,13 @@
 }
 
 .App-header {
-    background-color: var(--bg);
+    background-color: var(--bg-sharp);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     font-size: calc(10px + 2vmin);
     padding: 0.5rem 2rem;
-    color: var(--text);
+    color: var(--header-text);
     font-weight: 200;
     transition: background 500ms ease-in-out, color 1000ms ease-in-out;
 }
@@ -80,8 +105,6 @@
     padding: 1rem;
     grid-gap: 1rem;
     grid-template-columns: repeat(4, 1fr);
-    /* grid-template-rows: 1fr 3fr 3fr 3fr; */
-    /* height: 90vh; */
     grid-template-rows: repeat(4, 1fr);
     height: 100%;
 }
@@ -93,7 +116,7 @@
 #g1 {
     grid-column: 1 / 3;
     grid-row: 1;
-    background-color: var(--bg);
+    /* background-color: var(--bg); */
     color: var(--text);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -156,7 +179,8 @@
 }
 
 #intervalText {
-    color: var(--text-dull);
+    /* color: var(--text-dull); */
+    color: var(--refersh-counter);
     font-size: 2rem;
 }
 
@@ -167,7 +191,9 @@
 }
 
 #refresh {
-    transform: rotate(0)
+    transform: rotate(0);
+    height: 2.2rem;
+    filter: invert(var(--refresh-invert)) sepia(13%) saturate(3207%) hue-rotate(var(--refresh-hue-rotate)) brightness(95%) contrast(80%);
 }
 
 #refresh:active {

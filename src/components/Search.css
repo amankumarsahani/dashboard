@@ -9,6 +9,7 @@
     align-items: center;
     text-align: center;
     font-size: 1.5rem;
+    transition: background 500ms ease-in-out, color 1000ms ease-in-out;
 }
 
 #searchTitle {
@@ -18,8 +19,6 @@
 }
 
 #searchForm {
-    /* height: 100%; */
-    /* width: auto; */
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -39,8 +38,7 @@
 }
 
 #searchFormInput::placeholder {
-    color: var(--text-dull);
-    opacity: 0.5;
+    color: rgba(var(--placeholder), 0.5);
 }
 
 #searchFormSubmit {
@@ -61,4 +59,8 @@
 
 .searchChart {
     height: 80%;
+}
+
+.searchData {
+    color: var(--text-dull);
 }

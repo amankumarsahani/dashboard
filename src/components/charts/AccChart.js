@@ -51,7 +51,7 @@ export const options = {
   },
 };
 
-export default function AccChart({ data, type }) {
+export default function AccChart({ data, type, theme }) {
   if (type === undefined) {
     type = {
       dataX: "line",
@@ -76,6 +76,12 @@ export default function AccChart({ data, type }) {
       };
     }
   }
+  const color = {
+    dataX: "rgb(255, 99, 132)",
+    dataY: "rgb(53, 162, 235)",
+    dataZ: "#16a085",
+    mag: theme ? "#e056fd" : "#686de0",
+  };
 
   if (data) {
     let labels = data.dataLabels;
@@ -90,8 +96,8 @@ export default function AccChart({ data, type }) {
               type: type.dataX,
               label: "X-Axis",
               data: data.dataX,
-              borderColor: "rgb(255, 99, 132)",
-              backgroundColor: "rgb(255, 99, 132)",
+              borderColor: color.dataX,
+              backgroundColor: color.dataX,
               yAxisID: "y",
               tension: tension,
             },
@@ -99,8 +105,8 @@ export default function AccChart({ data, type }) {
               type: type.dataY,
               label: "Y-Axis",
               data: data.dataY,
-              borderColor: "rgb(53, 162, 235)",
-              backgroundColor: "rgb(53, 162, 235)",
+              borderColor: color.dataY,
+              backgroundColor: color.dataY,
               yAxisID: "y",
               tension: tension,
             },
@@ -108,8 +114,8 @@ export default function AccChart({ data, type }) {
               type: type.dataZ,
               label: "Z-Axis",
               data: data.dataZ,
-              borderColor: "#16a085",
-              backgroundColor: "#16a085",
+              borderColor: color.dataZ,
+              backgroundColor: color.dataZ,
               yAxisID: "y",
               tension: tension,
             },
@@ -117,8 +123,8 @@ export default function AccChart({ data, type }) {
               type: type.abs,
               label: "Magnitude",
               data: data.abs,
-              borderColor: "#8e44ad",
-              backgroundColor: "#8e44ad",
+              borderColor: color.mag,
+              backgroundColor: color.mag,
               yAxisID: "y",
               tension: tension,
             },

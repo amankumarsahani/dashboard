@@ -18,7 +18,6 @@ function App() {
   const [tempData, setTempData] = useState(null);
   const [interv, setInterv] = useState(60);
   const [theme, setTheme] = useState(1);
-
   const type1 = {
     dataX: "line",
     dataY: "line",
@@ -58,11 +57,6 @@ function App() {
             id="refresh"
             src={Refresh}
             alt="img"
-            style={{
-              height: "2.2rem",
-              filter:
-                "invert(48%) sepia(13%) saturate(3207%) hue-rotate(171deg) brightness(95%) contrast(80%)",
-            }}
             onClick={() => {
               setRefresh(!refresh);
               console.log("refreshed");
@@ -86,13 +80,13 @@ function App() {
           </div>
         </div>
         <div id="g2" className="graph">
-          <Search url={url} refresh={refresh}></Search>
+          <Search url={url} refresh={refresh} theme={theme}></Search>
         </div>
         <div id="g3" className="graph">
           <TempChart data={tempData}></TempChart>
         </div>
         <div id="g4" className="graph">
-          <AccChart type={type1} data={accData}></AccChart>
+          <AccChart type={type1} data={accData} theme={theme}></AccChart>
         </div>
         <div id="g5" className="graph">
           <span>

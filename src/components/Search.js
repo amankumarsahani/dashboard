@@ -5,7 +5,7 @@ import TempChart from "./charts/TempChart";
 import "./Search.css";
 import { makeAccData, makeTempData } from "../utils.js";
 
-export default function Search({ url, refresh }) {
+export default function Search({ url, refresh, theme }) {
   const [searchField, setSearchField] = useState("");
   const [id, setId] = useState("1:2:3");
   const [tempData, setTempata] = useState("");
@@ -66,7 +66,7 @@ export default function Search({ url, refresh }) {
             {parseFloat(accData.abs[0]).toFixed(2)}
           </div>
           <div className="searchChart">
-            <AccChart data={accData} type={type}></AccChart>
+            <AccChart data={accData} type={type} theme={theme}></AccChart>
           </div>
         </div>
       )}

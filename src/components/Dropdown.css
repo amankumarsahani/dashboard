@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    background: #282c34;
+    background: var(--bg-dull);
     font-family: roboto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -10,16 +10,6 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-:root {
-    --bg: #282c34;
-    --bg-accent: #b3b8be;
-    --text-color: #dadce1;
-    --nav-size: 60px;
-    --border: 1px solid #474a4d;
-    --border-radius: 8px;
-    --speed: 500ms;
-}
-
 ul {
     list-style: none;
     margin: 0;
@@ -27,26 +17,13 @@ ul {
 }
 
 a {
-    color: var(--text-color);
+    color: var(--text);
     text-decoration: none;
-    ;
 }
-
-
-/* Top Navigation Bar */
-
-
-/* <nav> */
 
 .navbar {
-    /* height: var(--nav-size); */
     background-color: transparent;
-    /* padding: 0 1rem; */
-    /* border-bottom: var(--border); */
 }
-
-
-/* <ul> */
 
 .navbar-nav {
     max-width: 100%;
@@ -55,24 +32,18 @@ a {
     justify-content: flex-end;
 }
 
-
-/* <li> */
-
 .nav-item {
-    width: calc(var(--nav-size) * 0.8);
+    width: calc(60 * 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-
-/* Icon Button */
-
 .icon-button {
-    --button-size: calc(var(--nav-size) * 0.5);
-    width: var(--button-size);
-    height: var(--button-size);
-    background-color: #282c34;
+    width: 30px;
+    height: 30px;
+    /* background-color: var(--bg-dull); */
+    background-color: var(--dropdown);
     border-radius: 50%;
     padding: 5px;
     margin: 2px;
@@ -87,14 +58,10 @@ a {
 }
 
 .icon-button svg {
-    /* fill: var(--text-color); */
     fill: rgb(0 195 255);
     width: 20px;
     height: 20px;
 }
-
-
-/* Dropdown Menu */
 
 .dropdown {
     position: absolute;
@@ -102,11 +69,11 @@ a {
     width: 250px;
     transform: translateX(-45%);
     background-color: var(--bg);
-    border: var(--border);
-    border-radius: var(--border-radius);
+    border: 1px solid var(--bg-dull);
+    border-radius: 8px;
     padding: 1rem;
     overflow: hidden;
-    transition: height var(--speed) ease;
+    transition: height 500ms ease;
     font-size: 1.4rem;
 }
 
@@ -118,9 +85,8 @@ a {
     height: 50px;
     display: flex;
     align-items: center;
-    border-radius: var(--border-radius);
-    transition: background var(--speed);
-    /* padding: 0.5rem; */
+    border-radius: 8px;
+    transition: background 500ms;
     width: 100%;
 }
 
@@ -128,20 +94,21 @@ a {
     margin-right: 0.5rem;
 }
 
+#arrowIcon {
+    color: var(--c3);
+}
+
 .menu-item .icon-button:hover {
     filter: none;
 }
 
 .menu-item:hover {
-    background-color: #525357;
+    background-color: var(--bg-dull);
 }
 
 .icon-right {
     margin-left: auto;
 }
-
-
-/* CSSTransition classes  */
 
 .menu-primary-enter {
     position: absolute;
@@ -150,7 +117,7 @@ a {
 
 .menu-primary-enter-active {
     transform: translateX(0%);
-    transition: all var(--speed) ease;
+    transition: all 500ms ease;
 }
 
 .menu-primary-exit {
@@ -159,7 +126,7 @@ a {
 
 .menu-primary-exit-active {
     transform: translateX(-110%);
-    transition: all var(--speed) ease;
+    transition: all 500ms ease;
 }
 
 .menu-secondary-enter {
@@ -168,13 +135,10 @@ a {
 
 .menu-secondary-enter-active {
     transform: translateX(0%);
-    transition: all var(--speed) ease;
+    transition: all 500ms ease;
 }
-
-
-/* .menu-secondary-exit {} */
 
 .menu-secondary-exit-active {
     transform: translateX(110%);
-    transition: all var(--speed) ease;
+    transition: all 500ms ease;
 }

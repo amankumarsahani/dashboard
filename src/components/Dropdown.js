@@ -104,7 +104,7 @@ function DropdownMenu() {
         onEnter={calcHeight}
       >
         <div className="menu">
-          <DropdownItem goToMenu="main" leftIcon={<ArrowIcon />}>
+          <DropdownItem goToMenu="main" leftIcon={<ArrowIcon id="arrowIcon" />}>
             <h2>Sensors</h2>
           </DropdownItem>
           <DropdownItem leftIcon={<BoltIcon />}>Sensor 1</DropdownItem>
@@ -122,7 +122,7 @@ function DropdownMenu() {
         onEnter={calcHeight}
       >
         <div className="menu">
-          <DropdownItem goToMenu="main" leftIcon={<ArrowIcon />}>
+          <DropdownItem goToMenu="main" leftIcon={<ArrowIcon id="arrowIcon" />}>
             <h2>Duration</h2>
           </DropdownItem>
           <DropdownItem leftIcon="🦘">1 Day</DropdownItem>
