@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
 :root {
     --c1: #121418;
     --c2: #282c34;
     --c3: #00c3ff;
     --c4: #16a085;
-    --c5: #fff;
+    --c5: rgb(207, 216, 243);
     --c6: rgb(222 231 253);
     --c7: #000;
     --c8: #454e56;
@@ -20,6 +20,12 @@
     --refresh-invert: 48%;
     --refresh-hue-rotate: 171deg;
     --refersh-counter: lime;
+    --f1: 0.6rem;
+    --f2: 1.2rem;
+    --f3: 1.8rem;
+    --f4: 2.4rem;
+    --f5: 3.0rem;
+    --f6: 3.6rem;
 }
 
 .dark {
@@ -46,7 +52,7 @@
     --bg-sharp: var(--h2);
     --text: var(--c7);
     --text-dull: var(--c4);
-    --header-text: var(--c5);
+    --header-text: var(--c6);
     --faint: #00000011;
     --theme-icon: url("../icons/moon.svg");
     --theme-icon-color: #d8d8d8;
@@ -77,7 +83,7 @@
     padding: 0.5rem 2rem;
     color: var(--header-text);
     font-weight: 200;
-    transition: background 500ms ease-in-out, color 1000ms ease-in-out;
+    transition: background 200ms ease-in-out, color 1000ms ease-in-out;
 }
 
 .options {
@@ -105,12 +111,13 @@
     padding: 1rem;
     grid-gap: 1rem;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    /* grid-template-rows: repeat(4, 1fr); */
+    grid-template-rows: 0.5fr 2fr 2fr 1fr;
     height: 100%;
 }
 
 .graphHolder>div {
-    transition: background 500ms ease-in-out, color 1000ms ease-in-out;
+    /* transition: background 500ms ease-in-out, color 1000ms ease-in-out; */
 }
 
 #g1 {
@@ -118,51 +125,45 @@
     grid-row: 1;
     /* background-color: var(--bg); */
     color: var(--text);
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    display: flex;
+    justify-content: space-around;
     align-items: center;
     text-align: center;
-    font-size: 4rem;
+    transition: background 300ms ease-in-out, color 600ms ease-in-out;
 }
 
-#counterText1 {
-    grid-column: 1;
-    grid-row: 1;
-    font-size: 1.5rem;
+.counterDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
-#counter1 {
+.counterText {
+    font-size: var(--f2);
+}
+
+.counter {
+    font-size: var(--f4);
     color: var(--text-dull);
-    grid-column: 1;
-    grid-row: 2/4;
-}
-
-#counterText2 {
-    grid-column: 2;
-    grid-row: 1;
-    font-size: 1.5rem;
-}
-
-#counter2 {
-    color: var(--text-dull);
-    grid-column: 2;
-    grid-row: 2/4;
 }
 
 #g2 {
     grid-column: 3 / 5;
     grid-row: 1/3;
+    transition: background 700ms ease-in-out, color 800ms ease-in-out;
 }
 
 #g3 {
     grid-column: 1 / 3;
     grid-row: 2;
+    transition: background 1000ms ease-in-out, color 800ms ease-in-out;
 }
 
 #g4 {
     grid-column: 1 / 4;
     grid-row: 3/5;
+    transition: background 1300ms ease-in-out, color 1000ms ease-in-out;
 }
 
 #g5 {
@@ -170,8 +171,9 @@
     grid-row: 3/5;
     color: var(--text);
     text-align: center;
-    font-size: 1.5rem;
+    font-size: calc(var(--f2)*0.9);
     padding: 2rem;
+    transition: background 1700ms ease-in-out, color 1200ms ease-in-out;
 }
 
 #g5 input {
@@ -181,7 +183,7 @@
 #intervalText {
     /* color: var(--text-dull); */
     color: var(--refersh-counter);
-    font-size: 2rem;
+    font-size: var(--f4);
 }
 
 .graph {
