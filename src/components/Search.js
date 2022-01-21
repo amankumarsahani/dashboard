@@ -3,13 +3,20 @@ import React, { useState, useEffect } from "react";
 import AccChart from "./charts/AccChart";
 import TempChart from "./charts/TempChart";
 import "./Search.css";
-import { makeAccData, makeTempData } from "../utils.js";
+import {
+  makeAccData,
+  makeTempData,
+  makeAccDataFromQuery,
+  makeTempDataFromQuery,
+} from "../utils.js";
 
 export default function Search({ url, refresh, theme }) {
   const [searchField, setSearchField] = useState("");
   const [id, setId] = useState("c3:83:0c:de:ae:07");
-  const [tempData, setTempata] = useState("");
-  const [accData, setAccdata] = useState("");
+  const [searchLim, setSearchLim] = useState(10);
+  const [lim, setLim] = useState(10);
+  const [accOrTempData, setAccOrTempData] = useState("");
+  const [sensor, setSensor] = useState("");
 
   const type = {
     dataX: "bar",
@@ -18,58 +25,96 @@ export default function Search({ url, refresh, theme }) {
     abs: "bar",
   };
 
-  const handleChange = (e) => {
+  const handleSearchChange = (e) => {
     setSearchField(e.target.value);
+  };
+  const handleLimChange = (e) => {
+    setSearchLim(e.target.value);
   };
   const handleSubmit = (event) => {
     event.preventDefault();
     if (searchField.length === 17) setId(searchField);
+    setLim(searchLim);
   };
 
   useEffect(() => {
     axios
-      .get(url + "?id=" + id)
+      .get(url + "?id=" + id + "&lim=" + lim)
       .then((response) => {
         if (response !== []) {
-          setTempata(makeTempData(response.data.temp, "time_stmp"));
-          setAccdata(makeAccData(response.data.acc, "time_stmp"));
+          if (response.data.accOrTemp[0].Sensor === "Accelerometer") {
+            setSensor("acc");
+            setAccOrTempData(
+              makeAccDataFromQuery(response.data.accOrTemp, "time_stmp")
+            );
+          } else if (response.data.accOrTemp[0].Sensor === "Temperature") {
+            setSensor("temp");
+            setAccOrTempData(
+              makeTempDataFromQuery(response.data.accOrTemp, "time_stmp")
+            );
+          }
         }
       })
       .catch((err) => console.error(err));
-  }, [id, url, refresh]);
+  }, [id, url, refresh, lim]);
 
   return (
     <div id="SearchContainer">
-      <div id="searchTitle">Search Device</div>
-      <form id="searchForm" onSubmit={handleSubmit}>
-        <span>Device ID :</span>
-        <input
-          id="searchFormInput"
-          type="text"
-          value={searchField}
-          placeholder={id}
-          onChange={handleChange}
-        />
-        <input id="searchFormSubmit" type="submit" value="Submit" />
-      </form>
-      {tempData && tempData.temp.length !== 0 && (
-        <div className="searchResult">
-          <div className="searchData">{tempData.temp[0]}</div>
-          <div className="searchChart">
-            <TempChart data={tempData}></TempChart>
+      <div id="searchHeader">
+        <div id="searchTitle">Search Device</div>
+        <form id="searchForm" onSubmit={handleSubmit}>
+          <div id="s1">
+            <span>Device ID :</span>
+            <input
+              id="searchFormInput"
+              type="text"
+              value={searchField}
+              placeholder={id}
+              onChange={handleSearchChange}
+            />
+            <input id="searchFormSubmit" type="submit" value="Submit" />
+            <span>{lim}</span>
           </div>
-        </div>
-      )}
-      {accData && accData.abs.length !== 0 && (
+
+          <input
+            id="lim"
+            type="range"
+            min="1"
+            max="100"
+            value={searchLim}
+            onChange={handleLimChange}
+          />
+        </form>
+      </div>
+      {sensor === "acc" && accOrTempData.abs && accOrTempData.abs.length !== 0 && (
         <div className="searchResult">
           <div className="searchData">
-            {parseFloat(accData.abs[0]).toFixed(2)}
+            {parseFloat(
+              accOrTempData.abs[accOrTempData.abs.length - 1]
+            ).toFixed(2)}
+            &nbsp;m/s
+            {"\u00b2"}
           </div>
           <div className="searchChart">
-            <AccChart data={accData} type={type} theme={theme}></AccChart>
+            <AccChart data={accOrTempData} type={type} theme={theme}></AccChart>
           </div>
         </div>
       )}
+      {sensor === "temp" &&
+        accOrTempData.temp &&
+        accOrTempData.temp.length !== 0 && (
+          <div className="searchResult">
+            <div className="searchData">
+              {parseFloat(
+                accOrTempData.temp[accOrTempData.temp.length - 1]
+              ).toFixed(2)}
+              &nbsp; ºC
+            </div>
+            <div className="searchChart">
+              <TempChart data={accOrTempData}></TempChart>
+            </div>
+          </div>
+        )}
     </div>
   );
 }
