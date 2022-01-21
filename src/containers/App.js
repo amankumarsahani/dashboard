@@ -10,9 +10,8 @@ import DeviceCounter from "../components/DeviceCounter.js";
 import Search from "../components/Search.js";
 
 function App() {
-  // const url =
-  //   "https://rtvab1na8b.execute-api.us-west-2.amazonaws.com/default/fetchDynamoDBdata";
-  const url = "https://o0qpbhstj6.execute-api.ap-south-1.amazonaws.com/GetData";
+  const url =
+    "https://rtvab1na8b.execute-api.us-west-2.amazonaws.com/default/fetchDynamoDBdata";
   const [refresh, setRefresh] = useState(false);
   const [accData, setAccData] = useState(null);
   const [tempData, setTempData] = useState(null);
