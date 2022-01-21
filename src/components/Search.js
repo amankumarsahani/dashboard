@@ -7,7 +7,7 @@ import { makeAccData, makeTempData } from "../utils.js";
 
 export default function Search({ url, refresh, theme }) {
   const [searchField, setSearchField] = useState("");
-  const [id, setId] = useState("1:2:3");
+  const [id, setId] = useState("c3:83:0c:de:ae:07");
   const [tempData, setTempata] = useState("");
   const [accData, setAccdata] = useState("");
 
@@ -23,7 +23,7 @@ export default function Search({ url, refresh, theme }) {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (searchField.length === 5) setId(searchField);
+    if (searchField.length === 17) setId(searchField);
   };
 
   useEffect(() => {
