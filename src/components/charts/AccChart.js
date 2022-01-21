@@ -48,6 +48,18 @@ export const options = {
         color: "#FFFFFF11",
       },
     },
+    x: {
+      ticks: {
+        autoSkip: true,
+        maxTicksLimit: 10,
+        maxRotation: 15,
+      },
+    },
+  },
+  elements: {
+    point: {
+      radius: 0,
+    },
   },
 };
 
