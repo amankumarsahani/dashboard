@@ -1,13 +1,36 @@
-export function makeTempData(arr, xKey = "DeviceID", sortKey = "time_stmp") {
+export function makeTempData(
+  arr,
+  xKey = "DeviceID",
+  sortKey = "time_stmp",
+  retKey = "Temperature_degC"
+) {
   arr.sort((a, b) => timeDateSorter(a, b, sortKey));
   let dataLabels = [];
   let temp = [];
   console.log("TempDataFetched: ", arr.length);
   for (let i = 0; i < arr.length; i++) {
     dataLabels.push(arr[i][xKey]);
-    temp.push(
-      Math.abs(arr[i].Temperature_degC) > 100 ? 0 : arr[i].Temperature_degC
-    );
+    temp.push(Math.abs(arr[i][retKey]) > 100 ? 0 : arr[i][retKey]);
+  }
+  return { dataLabels, temp };
+}
+
+export function makeTempDataFromQuery(
+  arr,
+  xKey = "DeviceID",
+  sortKey = "time_stmp",
+  retKey = "Value"
+) {
+  arr.sort((a, b) => timeDateSorter(a, b, sortKey));
+  let dataLabels = [];
+  let temp = [];
+  console.log("TempDataFetched: ", arr.length);
+  for (let i = 0; i < arr.length; i++) {
+    let label = arr[i][xKey];
+    // label;
+    dataLabels.push(arr[i][xKey]);
+    temp.push(Math.abs(arr[i][retKey]) > 100 ? 0 : arr[i][retKey]);
+    console.log(Math.abs(arr[i][retKey]));
   }
   return { dataLabels, temp };
 }
@@ -29,6 +52,34 @@ export function makeAccData(arr, xKey = "DeviceID", sortKey = "time_stmp") {
       Math.pow(arr[i].X_axis, 2) +
         Math.pow(arr[i].Y_axis, 2) +
         Math.pow(arr[i].Z_axis, 2),
+      0.5
+    );
+    abs.push(x);
+  }
+  return { dataLabels, dataX, dataY, dataZ, abs };
+}
+
+export function makeAccDataFromQuery(
+  arr,
+  xKey = "DeviceID",
+  sortKey = "time_stmp",
+  retKey = "Value"
+) {
+  arr.sort((a, b) => timeDateSorter(a, b, sortKey));
+  let dataLabels = [];
+  let dataX = [];
+  let dataY = [];
+  let dataZ = [];
+  let abs = [];
+  for (let i = 0; i < arr.length; i++) {
+    dataLabels.push(arr[i][xKey]);
+    let val = arr[i][retKey];
+    val = val.split(",");
+    dataX.push(val[0]);
+    dataY.push(val[1]);
+    dataZ.push(val[2]);
+    let x = Math.pow(
+      Math.pow(val[0], 2) + Math.pow(val[1], 2) + Math.pow(val[2], 2),
       0.5
     );
     abs.push(x);
