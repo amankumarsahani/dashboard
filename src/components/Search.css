@@ -3,31 +3,48 @@
     height: 100%;
     background-color: transparent;
     color: var(--text);
-    display: grid;
-    grid-template-columns: 40% auto;
-    grid-template-rows: 15% auto;
+    display: flex;
+    flex-direction: column;
+    /* grid-template-columns: 40% auto;
+    grid-template-rows: 15% auto; */
     align-items: center;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: var(--f2);
     transition: background 500ms ease-in-out, color 1000ms ease-in-out;
 }
 
+#searchHeader {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+}
+
 #searchTitle {
-    grid-column: 1 / 2;
-    grid-row: 1;
-    font-size: 2rem;
+    font-size: var(--f3);
 }
 
 #searchForm {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    width: 50%;
+}
+
+#s1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
+}
+
+#lim {
+    width: 100%;
 }
 
 #searchFormInput {
     width: 10rem;
     border: none;
-    font-size: 1rem;
+    font-size: var(--f2);
     padding: 0.5rem;
     margin: 0.5rem;
     background-color: var(--faint);
@@ -51,6 +68,7 @@
 }
 
 .searchResult {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -58,9 +76,14 @@
 }
 
 .searchChart {
-    height: 80%;
+    width: 100%;
+    height: 100%;
+    align-self: baseline;
 }
 
 .searchData {
     color: var(--text-dull);
+    font-size: var(--f3);
+    align-self: baseline;
+    padding: 0 4rem;
 }
