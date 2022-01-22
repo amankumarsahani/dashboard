@@ -1,7 +1,6 @@
 import "./Dropdown.css";
 import { ReactComponent as CaretIcon } from "../icons/caret.svg";
 import { ReactComponent as CogIcon } from "../icons/cog.svg";
-import { ReactComponent as ChevronIcon } from "../icons/chevron.svg";
 import { ReactComponent as ArrowIcon } from "../icons/arrow.svg";
 import { ReactComponent as BoltIcon } from "../icons/bolt.svg";
 
@@ -79,18 +78,10 @@ function DropdownMenu() {
       >
         <div className="menu">
           <DropdownItem leftIcon="📘">About</DropdownItem>
-          <DropdownItem
-            leftIcon={<CogIcon />}
-            rightIcon={<ChevronIcon />}
-            goToMenu="settings"
-          >
+          <DropdownItem leftIcon={<CogIcon />} goToMenu="settings">
             Sensors
           </DropdownItem>
-          <DropdownItem
-            leftIcon="⏱"
-            rightIcon={<ChevronIcon />}
-            goToMenu="animals"
-          >
+          <DropdownItem leftIcon="⏱" goToMenu="animals">
             Duration
           </DropdownItem>
         </div>
