@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function makeTempData(
   arr,
   xKey = "DeviceID",
@@ -26,11 +28,8 @@ export function makeTempDataFromQuery(
   let temp = [];
   console.log("TempDataFetched: ", arr.length);
   for (let i = 0; i < arr.length; i++) {
-    let label = arr[i][xKey];
-    // label;
     dataLabels.push(arr[i][xKey]);
     temp.push(Math.abs(arr[i][retKey]) > 100 ? 0 : arr[i][retKey]);
-    console.log(Math.abs(arr[i][retKey]));
   }
   return { dataLabels, temp };
 }
@@ -72,7 +71,13 @@ export function makeAccDataFromQuery(
   let dataZ = [];
   let abs = [];
   for (let i = 0; i < arr.length; i++) {
-    dataLabels.push(arr[i][xKey]);
+    dataLabels.push(moment(toDate(arr[i][xKey])).format("lll"));
+    // dataLabels.push(
+    //   moment(toDate(arr[i][xKey])).format("MMM Do YY") +
+    //     " " +
+    //     moment(toDate(arr[i][xKey])).format("LTS")
+    // );
+
     let val = arr[i][retKey];
     val = val.split(",");
     dataX.push(val[0]);
@@ -102,3 +107,31 @@ function timeDateSorter(_a, _b, key) {
   else if (p > q) return 1;
   return 0;
 }
+
+export const makeWaterData = (arr) => {
+  arr.sort((a, b) => timeDateSorter(a, b, "Timestamp"));
+  let [dataLabels, tds, cod, bod, ph, temp, ec] = [[], [], [], [], [], [], []];
+  console.log("WaterDataFetched: ", arr.length);
+  for (let i = 0; i < arr.length; i++) {
+    dataLabels.push(moment(toDate(arr[i]["Timestamp"])).format("lll"));
+    tds.push(Math.abs(arr[i].TDS) > 1000 ? 0 : arr[i].TDS);
+    cod.push(Math.abs(arr[i].COD) > 100 ? 0 : arr[i].COD);
+    bod.push(Math.abs(arr[i].BOD) > 100 ? 0 : arr[i].BOD);
+    ph.push(Math.abs(arr[i].pH) > 20 ? 0 : arr[i].pH);
+    temp.push(Math.abs(arr[i].Temperature) > 70 ? 0 : arr[i].Temperature);
+    ec.push(
+      Math.abs(arr[i]["Electro-conductivity"]) > 100
+        ? 0
+        : arr[i]["Electro-conductivity"]
+    );
+  }
+  return { dataLabels, tds, cod, bod, ph, temp, ec };
+};
+export const genRan = (min, max) => {
+  let x = min + Math.floor(Math.random() * (max - min));
+  console.log(x);
+
+  return x;
+};
+
+export const hexWithAlpha = (hex, alpha) => `${hex}${alpha}`;
