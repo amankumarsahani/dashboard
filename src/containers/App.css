@@ -1,43 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
 :root {
+    --dark1: #282c34;
+    --dark2: #2a3242;
+    --dark3: #263655;
+    --dark4: #1d3669;
+    --dark5: #0b2f75;
+    --light1: #b6ad90;
+    --light2: #b6ad90;
+    --light3: #b6ad90;
+    --light4: #b6ad90;
+    --light5: #b6ad90;
     --c1: #121418;
     --c2: #282c34;
     --c3: #00c3ff;
     --c4: #16a085;
-    --c5: rgb(207, 216, 243);
-    --c6: rgb(222 231 253);
-    --c7: #000;
+    --c5: #333d29;
+    --c6: #b6ad90;
+    --c7: #582f0e;
     --c8: #454e56;
+    --c9: #131822;
+    --c10: #0c111a;
     --h1: #121418;
-    --h2: rgb(130 156 249);
+    --h2: #354f52;
     --faint: #ffffff11;
     --theme-icon: url("../icons/sun.svg");
     --theme-icon-color: #f39c12;
     --placeholder: 22, 160, 133;
-    --alpha: 0.8;
-    --glass: 0, 0, 0;
     --dropdown: rgb(69, 97, 197);
     --refresh-invert: 48%;
     --refresh-hue-rotate: 171deg;
     --refersh-counter: lime;
-    --f1: 0.6rem;
-    --f2: 1.2rem;
-    --f3: 1.8rem;
-    --f4: 2.4rem;
-    --f5: 3.0rem;
-    --f6: 3.6rem;
+    --f0: 1vw;
 }
 
 .dark {
-    --bg: var(--c1);
-    --bg-dull: var(--c2);
-    --bg-sharp: var(--h1);
+    --header-bg: var(--c9);
+    --bg: var(--c10);
+    --bg1: var(--c1);
+    --bg2: var(--c1);
+    --bg3: var(--c9);
     --text: var(--c3);
     --text-dull: var(--c4);
     --header-text: var(--c3);
     --faint: #504b4b11;
     --theme-icon: url("../icons/sun.svg");
-    --theme-icon-color: #f39c12;
+    --theme-icon-color: #e4c98f;
+    --theme-icon-hover: #f39c12;
     --placeholder: 22, 160, 133;
     --glass: 0, 0, 0;
     --dropdown: var(--bg-dull);
@@ -47,15 +55,20 @@
 }
 
 .light {
-    --bg: var(--c5);
-    --bg-dull: var(--c6);
+    --header-bg: #667afa;
+    --bg: #e1e4f8;
+    --bg1: #023047;
+    --bg2: rgb(255, 255, 255);
+    --bg3: #ffffff;
     --bg-sharp: var(--h2);
-    --text: var(--c7);
+    --text: #37474f;
+    --text2: #76838f;
     --text-dull: var(--c4);
-    --header-text: var(--c6);
+    --header-text: #ffffff;
     --faint: #00000011;
     --theme-icon: url("../icons/moon.svg");
     --theme-icon-color: #d8d8d8;
+    --theme-icon-hover: #ffffff;
     --placeholder: 69, 78, 86;
     --glass: 255, 255, 255;
     --dropdown: rgb(69, 97, 197);
@@ -65,7 +78,7 @@
 }
 
 .App {
-    background-color: var(--bg-dull);
+    background-color: var(--bg);
     height: 100vh;
     width: 100vw;
     display: flex;
@@ -75,7 +88,7 @@
 }
 
 .App-header {
-    background-color: var(--bg-sharp);
+    background-color: var(--header-bg);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -88,7 +101,7 @@
 
 .options {
     display: flex;
-    width: 200px;
+    width: 100px;
     align-items: center;
     justify-content: space-between;
 }
@@ -100,6 +113,10 @@
     transition: mask 500ms ease-in-out;
 }
 
+#themeToggle:hover {
+    background-color: var(--theme-icon-hover);
+}
+
 #themeToggle div {
     width: 30px;
     height: 30px;
@@ -108,16 +125,32 @@
 .graphHolder {
     margin: 0;
     display: grid;
-    padding: 1rem;
-    grid-gap: 1rem;
+    padding: var(--f0);
+    grid-gap: var(--f0);
     grid-template-columns: repeat(4, 1fr);
     /* grid-template-rows: repeat(4, 1fr); */
     grid-template-rows: 0.5fr 2fr 2fr 1fr;
     height: 100%;
 }
 
-.graphHolder>div {
-    /* transition: background 500ms ease-in-out, color 1000ms ease-in-out; */
+.graph {
+    /* background-color: var(--bg); */
+    position: relative;
+    background-image: linear-gradient(90deg, var(--bg2), var(--bg3));
+    border-radius: calc(var(--f0)*0.7);
+    padding: calc(var(--f0)*1);
+    color: var(--text);
+}
+
+.chartTitle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: start;
+    padding: 0 calc(var(--f0)*5);
+    color: var(--text);
+    font-size: calc(var(--f0)*1.4);
 }
 
 #g1 {
@@ -140,11 +173,11 @@
 }
 
 .counterText {
-    font-size: var(--f2);
+    font-size: calc(var(--f0)*1.2);
 }
 
 .counter {
-    font-size: var(--f4);
+    font-size: calc(var(--f0)*2.4);
     color: var(--text-dull);
 }
 
@@ -171,8 +204,8 @@
     grid-row: 3/5;
     color: var(--text);
     text-align: center;
-    font-size: calc(var(--f2)*0.9);
-    padding: 2rem;
+    font-size: calc(var(--f0)*1.4);
+    padding: calc(var(--f0)*1.2);
     transition: background 1700ms ease-in-out, color 1200ms ease-in-out;
 }
 
@@ -183,18 +216,12 @@
 #intervalText {
     /* color: var(--text-dull); */
     color: var(--refersh-counter);
-    font-size: var(--f4);
-}
-
-.graph {
-    background-color: var(--bg);
-    border-radius: 0.7rem;
-    padding: 1rem;
+    font-size: calc(var(--f0)*2.4);
 }
 
 #refresh {
     transform: rotate(0);
-    height: 2.2rem;
+    height: calc(var(--f0)*2.2);
     filter: invert(var(--refresh-invert)) sepia(13%) saturate(3207%) hue-rotate(var(--refresh-hue-rotate)) brightness(95%) contrast(80%);
 }
 
