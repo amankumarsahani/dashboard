@@ -1,4 +1,5 @@
 import moment from "moment";
+import "chartjs-adapter-moment";
 
 export function makeTempData(
   arr,
@@ -28,7 +29,7 @@ export function makeTempDataFromQuery(
   let temp = [];
   console.log("TempDataFetched: ", arr.length);
   for (let i = 0; i < arr.length; i++) {
-    dataLabels.push(arr[i][xKey]);
+    dataLabels.push(moment(toDate(arr[i][xKey])).format("lll"));
     temp.push(Math.abs(arr[i][retKey]) > 100 ? 0 : arr[i][retKey]);
   }
   return { dataLabels, temp };
@@ -72,6 +73,7 @@ export function makeAccDataFromQuery(
   let abs = [];
   for (let i = 0; i < arr.length; i++) {
     dataLabels.push(moment(toDate(arr[i][xKey])).format("lll"));
+
     // dataLabels.push(
     //   moment(toDate(arr[i][xKey])).format("MMM Do YY") +
     //     " " +
