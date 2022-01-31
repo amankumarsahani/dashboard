@@ -1,5 +1,9 @@
 import moment from "moment";
 import "chartjs-adapter-moment";
+import AnimatedNumber from "animated-number-react";
+import ReactLoading from "react-loading";
+
+import React from "react";
 
 export function makeTempData(
   arr,
@@ -137,3 +141,28 @@ export const genRan = (min, max) => {
 };
 
 export const hexWithAlpha = (hex, alpha) => `${hex}${alpha}`;
+
+export const NumberAnimated = ({ data, dig = 0 }) => {
+  const formatValue = (data) => data.toFixed(dig);
+  return <AnimatedNumber value={data} formatValue={formatValue} />;
+};
+
+export const Loading = ({ height = 30, width = 30 }) => {
+  return (
+    <div
+      style={{
+        height: "100%",
+        display: "grid",
+        justifyContent: "center",
+        alignContent: "center",
+      }}
+    >
+      <ReactLoading
+        type={"bars"}
+        color={"#8676ff"}
+        width={width}
+        height={height}
+      ></ReactLoading>
+    </div>
+  );
+};
