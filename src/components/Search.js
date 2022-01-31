@@ -3,16 +3,27 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import ReactChart from "./charts/ReactChart";
 import "./Search.css";
-import { makeAccDataFromQuery, makeTempDataFromQuery } from "../utils.js";
+import {
+  makeAccDataFromQuery,
+  makeTempDataFromQuery,
+  Loading,
+} from "../utils.js";
 
-export default function Search({ url, refresh, theme, vw }) {
+export default function Search({
+  url,
+  refresh,
+  theme,
+  vw,
+  forwardedRef,
+  setSearchId,
+}) {
   const [searchField, setSearchField] = useState("");
   const [id, setId] = useState("c3:83:0c:de:ae:07");
   const [searchLim, setSearchLim] = useState(10);
   const [lim, setLim] = useState(10);
   const [accOrTempData, setAccOrTempData] = useState("");
   const [sensor, setSensor] = useState("");
-  const [pr, setPr] = useState(0);
+  const [responded, setResponded] = useState(true);
 
   const handleSearchChange = (e) => {
     setSearchField(e.target.value);
@@ -59,10 +70,12 @@ export default function Search({ url, refresh, theme, vw }) {
       }
     }
   };
+  let prev = "c3:83:0c:de:ae:07";
 
   useEffect(() => {
+    setResponded(false);
     axios.get(url + "?id=" + id + "&lim=" + lim).then((response) => {
-      if (response !== []) {
+      if (response.data.accOrTemp.length !== 0) {
         if (!accOrTempData) {
           if (response.data.accOrTemp[0].Sensor === "Accelerometer") {
             setSensor("acc");
@@ -76,7 +89,10 @@ export default function Search({ url, refresh, theme, vw }) {
             );
           }
         } else handleNewResponse(response);
+        prev = id;
+        setSearchId(id);
       }
+      setResponded(true);
     });
   }, [id, url, refresh, lim]);
 
@@ -84,61 +100,20 @@ export default function Search({ url, refresh, theme, vw }) {
     (document.getElementById("lim").oninput = function () {
       var value = ((this.value - this.min) / (this.max - this.min)) * 100;
       this.style.background =
-        "linear-gradient(to right, #82CFD0 0%, #82CFD0 " +
+        "linear-gradient(to right, #16a085 0%, #16a085 " +
         value +
         "%, #fff " +
         value +
-        "%, white 100%)";
+        "%, #fff 100%)";
     });
 
   return (
     <div id="SearchContainer">
-      <div id="searchHeader">
-        <div id="searchTitle">Search Device</div>
-        <form id="searchForm" onSubmit={handleSubmit}>
-          <div id="s1">
-            <span>Device ID :</span>
-            <input
-              id="searchFormInput"
-              type="text"
-              value={searchField}
-              placeholder={id}
-              onChange={handleSearchChange}
-            />
-            <input id="searchFormSubmit" type="submit" value="Submit" />
-            <span>{lim}</span>
-          </div>
-
-          <input
-            id="lim"
-            type="range"
-            min="1"
-            max="100"
-            value={searchLim}
-            onChange={handleLimChange}
-          />
-        </form>
-      </div>
       <div className="searchResult">
-        <div className="searchData">
-          {accOrTempData &&
-            accOrTempData[sensor === "acc" ? "abs" : "temp"] &&
-            parseFloat(
-              accOrTempData[sensor === "acc" ? "abs" : "temp"][
-                accOrTempData[sensor === "acc" ? "abs" : "temp"].length - 1
-              ]
-            ).toFixed(2)}
-          &nbsp; {sensor === "acc" ? " m/s\u00b2" : " ºC"}
-        </div>
         {sensor === "acc" &&
           accOrTempData.abs &&
           accOrTempData.abs.length !== 0 && (
-            <div
-              className="searchChart"
-              onClick={() => {
-                setPr(!pr);
-              }}
-            >
+            <div className="searchChart">
               <ReactChart
                 title={"Accelerometer"}
                 xLabel={accOrTempData.dataLabels}
@@ -156,10 +131,13 @@ export default function Search({ url, refresh, theme, vw }) {
                     : ["bar", "bar", "bar", "bar"]
                 }
                 colorArr={["#ff006f", "#f5a7a0", "#0fc26c", "#0062ff"]}
+                legendColor={theme ? "#00c3ff" : "#16a085"}
                 fillArr={[false, false, false, true]}
                 fontSize={vw}
+                gridArr={[0, 1]}
                 gridColor={theme ? "#ffffff11" : "#00000022"}
-                pr={pr}
+                offset={true}
+                forwardedRef={forwardedRef}
               />
             </div>
           )}
@@ -173,15 +151,77 @@ export default function Search({ url, refresh, theme, vw }) {
                 yLabelArr={["Temperature ºC         "]}
                 yAxisIDArr={["y"]}
                 yDataArr={[accOrTempData.temp]}
-                typeArr={["bar"]}
+                typeArr={lim > 10 ? ["line"] : ["bar"]}
                 colorArr={["#ff006f"]}
+                legendColor={theme ? "#00c3ff" : "#16a085"}
                 fillArr={[true]}
                 fontSize={vw}
+                gridArr={[0, 1]}
                 gridColor={theme ? "#ffffff11" : "#00000022"}
-                pr={pr[0]}
+                offset={true}
+                forwardedRef={forwardedRef}
               />
             </div>
           )}
+      </div>
+      <div id="searchHeader">
+        <div id="searchTitle">
+          <span>Search Device</span>
+          {!responded && (
+            <span className="loading">
+              <Loading height={24} width={24} />
+            </span>
+          )}
+        </div>
+        <form id="searchForm" onSubmit={handleSubmit}>
+          <div id="searchFormID">
+            <span>
+              Device ID <span style={{ fontSize: vw * 0.8 }}> &#9660;</span>
+            </span>
+            <input
+              id="lim"
+              type="range"
+              min="1"
+              max="100"
+              value={searchLim}
+              onChange={handleLimChange}
+            />
+            <span id="limCounter">{lim}</span>
+          </div>
+          <input
+            id="searchFormInput"
+            type="text"
+            value={searchField}
+            placeholder={prev}
+            onChange={handleSearchChange}
+          />
+
+          <input id="searchFormSubmit" type="submit" value="Submit" />
+          <div className="searchData">
+            <div>
+              <span>Time :</span>
+              <span>
+                {accOrTempData &&
+                  accOrTempData.dataLabels &&
+                  accOrTempData.dataLabels[accOrTempData.dataLabels.length - 1]}
+              </span>
+            </div>
+            <div>
+              <span>Live Value :</span>
+              <span>
+                {accOrTempData &&
+                  accOrTempData[sensor === "acc" ? "abs" : "temp"] &&
+                  parseFloat(
+                    accOrTempData[sensor === "acc" ? "abs" : "temp"][
+                      accOrTempData[sensor === "acc" ? "abs" : "temp"].length -
+                        1
+                    ]
+                  ).toFixed(2)}
+                &nbsp; {sensor === "acc" ? " m/s\u00b2" : " ºC"}
+              </span>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );
