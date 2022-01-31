@@ -1,7 +1,7 @@
 import React from "react";
 import ReactLoading from "react-loading";
 
-export default function Loading() {
+export default function Loading({ height = 30, width = 30 }) {
   return (
     <div
       style={{
@@ -11,7 +11,12 @@ export default function Loading() {
         alignContent: "center",
       }}
     >
-      <ReactLoading type={"bars"} color={"#2980b9"}></ReactLoading>;
+      <ReactLoading
+        type={"bars"}
+        color={"#8676ff"}
+        width={width}
+        height={height}
+      ></ReactLoading>
     </div>
   );
 }
