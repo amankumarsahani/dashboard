@@ -1,4 +1,3 @@
-import { saveAs } from "file-saver";
 import { Chart, registerables } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { hexWithAlpha } from "../../utils.js";

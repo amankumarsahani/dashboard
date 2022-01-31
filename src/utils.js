@@ -1,5 +1,4 @@
 import moment from "moment";
-import "chartjs-adapter-moment";
 import AnimatedNumber from "animated-number-react";
 import ReactLoading from "react-loading";
 
