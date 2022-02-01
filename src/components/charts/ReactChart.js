@@ -81,7 +81,7 @@ export default function ReactChart({
       data: yData,
       backgroundColor: hexWithAlpha(colorArr[i], "33"),
       borderColor: colorArr[i],
-      borderWidth: 0.1 * fontSize,
+      borderWidth: 0.15 * fontSize,
       yAxisID: yAxisIDArr[i],
       tension: 0.4,
       fill: fillArr[i],
