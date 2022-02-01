@@ -70,7 +70,7 @@ export default function Search({
       }
     }
   };
-  let prev = "c3:83:0c:de:ae:07";
+  const [prev, setPrev] = useState("c3:83:0c:de:ae:07");
 
   useEffect(() => {
     setResponded(false);
@@ -89,7 +89,7 @@ export default function Search({
             );
           }
         } else handleNewResponse(response);
-        prev = id;
+        setPrev(id);
         setSearchId(id);
       }
       setResponded(true);
@@ -115,7 +115,7 @@ export default function Search({
           accOrTempData.abs.length !== 0 && (
             <div className="searchChart">
               <ReactChart
-                title={"Accelerometer"}
+                title={`Accelerometer      ID : ${prev}`}
                 xLabel={accOrTempData.dataLabels}
                 yLabelArr={["X-axis", "Y-axis", "Z-axis", "Magnitude"]}
                 yAxisIDArr={["y", "y", "y", "y"]}
@@ -131,7 +131,7 @@ export default function Search({
                     : ["bar", "bar", "bar", "bar"]
                 }
                 colorArr={["#ff006f", "#f5a7a0", "#0fc26c", "#0062ff"]}
-                legendColor={theme ? "#00c3ff" : "#16a085"}
+                legendColor={theme ? "#00c3ff" : "#8676ff"}
                 fillArr={[false, false, false, true]}
                 fontSize={vw}
                 gridArr={[0, 1]}
@@ -146,14 +146,15 @@ export default function Search({
           accOrTempData.temp.length !== 0 && (
             <div className="searchChart">
               <ReactChart
-                title={"Temperature"}
+                title={`Temperature      ID : ${prev}`}
                 xLabel={accOrTempData.dataLabels}
                 yLabelArr={["Temperature ºC         "]}
                 yAxisIDArr={["y"]}
                 yDataArr={[accOrTempData.temp]}
                 typeArr={lim > 10 ? ["line"] : ["bar"]}
                 colorArr={["#ff006f"]}
-                legendColor={theme ? "#00c3ff" : "#16a085"}
+                legend={false}
+                legendColor={theme ? "#00c3ff" : "#8676ff"}
                 fillArr={[true]}
                 fontSize={vw}
                 gridArr={[0, 1]}
