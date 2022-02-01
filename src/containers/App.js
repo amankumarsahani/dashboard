@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { makeAccData, makeTempData, NumberAnimated } from "../utils.js";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import Refresh from "../icons/refresh.png";
+import Refresh from "../icons/refresh.svg";
 import Search from "../components/Search.js";
 import ReactChart from "../components/charts/ReactChart";
 import moment from "moment";
@@ -21,8 +21,38 @@ function App() {
   const searchRef = useRef(null);
   const accRef = useRef(null);
   const tempRef = useRef(null);
+  const [accAvg, setAccAvg] = useState({});
+  const [tempAvg, setTempAvg] = useState({});
 
   const [searchId, setSearchId] = useState("c3:83:0c:de:ae:07");
+
+  useEffect(() => {
+    if (!accData || !tempData) return;
+    let len = accData.dataLabels.length;
+    let avgX = 0;
+    let avgY = 0;
+    let avgZ = 0;
+    let avgAbs = 0;
+    accData.dataX.forEach((x) => (avgX += parseFloat(x)));
+    accData.dataY.forEach((y) => (avgY += parseFloat(y)));
+    accData.dataZ.forEach((z) => (avgZ += parseFloat(z)));
+    accData.abs.forEach((abs) => (avgAbs += parseFloat(abs)));
+
+    setAccAvg({
+      avgX: [avgX / len],
+      avgY: [avgY / len],
+      avgZ: [avgZ / len],
+      avgAbs: [avgAbs / len],
+    });
+    console.log(accAvg);
+
+    len = tempData.dataLabels.length;
+    let avgTemp = 0;
+    tempData.temp.forEach((temp) => (avgTemp += parseFloat(temp)));
+    setTempAvg({
+      avgTemp: [avgTemp / len],
+    });
+  }, [accData, tempData]);
 
   const handleIntervalChange = (e) => {
     setInterv(e.target.value);
@@ -81,16 +111,20 @@ function App() {
   // }%`;
   const loadBar = () => {
     if (document.querySelector("#activeBar")) {
-      document.querySelector("#activeBar").style.width = `${accData && 50}%`;
+      if (!accData || !tempData) return;
+      document.querySelector("#activeBar").style.width = `${
+        ((accData.dataLabels.length + tempData.dataLabels.length) / (12 + 8)) *
+        100
+      }%`;
     }
     if (document.querySelector("#s1g2c1 #activeBar")) {
       document.querySelector("#s1g2c1 #activeBar").style.width = `${
-        accData && 50
+        (accData.dataLabels.length / 12) * 100
       }%`;
     }
     if (document.querySelector("#s1g2c2 #activeBar")) {
       document.querySelector("#s1g2c2 #activeBar").style.width = `${
-        accData && 50
+        (tempData.dataLabels.length / 8) * 100
       }%`;
     }
   };
@@ -103,6 +137,7 @@ function App() {
           <div id="themeToggle" onClick={() => setTheme(!theme)}>
             <div>{/* div neccessary to size the themeToggle icon */}</div>
           </div>
+
           <img
             id="refresh"
             src={Refresh}
@@ -112,6 +147,7 @@ function App() {
               console.log("refreshed");
             }}
           ></img>
+
           {/* <Dropdown /> */}
         </div>
       </header>
@@ -130,11 +166,12 @@ function App() {
             id="m0"
             style={{
               opacity: aaa ? 1 : 0,
-              transform: `translateX(${10 * !aaa}px)`,
+              transform: `translateX(${-20 * aaa}px)`,
             }}
             onClick={() => setAaa(0)}
           >
             <div
+              id="mi1"
               onClick={() => {
                 if (!aaa) return;
                 const canvasSave = searchRef.current.canvas;
@@ -152,6 +189,7 @@ function App() {
               SEARCH
             </div>
             <div
+              id="mi2"
               onClick={() => {
                 if (!aaa) return;
                 const canvasSave = tempRef.current.canvas;
@@ -164,6 +202,7 @@ function App() {
               TEMPERATURE
             </div>
             <div
+              id="mi3"
               onClick={() => {
                 if (!aaa) return;
                 const canvasSave = accRef.current.canvas;
@@ -181,11 +220,8 @@ function App() {
       <section className="sec1">
         <div id="s1g1" className="graph">
           <span className="counterText">Active &nbsp; Sensors</span>
-          <div id="barAndCounter">
-            <div id="totalBar" className="loadBar">
-              <div id="activeBar" onLoad={loadBar()}></div>
-            </div>
-            <div id="activeTotalCounter" className="counter">
+          <div id="activeTotalCounter" className="counter">
+            <div>
               <NumberAnimated
                 data={
                   accData &&
@@ -193,12 +229,24 @@ function App() {
                   accData.dataLabels.length + tempData.dataLabels.length
                 }
               />
-              /
-              {accData &&
-                tempData &&
-                accData.dataLabels.length + tempData.dataLabels.length}
+              /{12 + 8}
               {!accData && !tempData && "..."}
             </div>
+            <div>
+              <NumberAnimated
+                data={
+                  accData &&
+                  tempData &&
+                  ((accData.dataLabels.length + tempData.dataLabels.length) /
+                    (12 + 8)) *
+                    100
+                }
+              />
+              %
+            </div>
+          </div>
+          <div id="totalBar" className="loadBar">
+            <div id="activeBar" onLoad={loadBar()}></div>
           </div>
         </div>
         <div id="s1g2" className="graph">
@@ -208,7 +256,7 @@ function App() {
             <div id="barAndCounter">
               <div id="activeTotalCounter" className="counter">
                 <NumberAnimated data={accData && accData.dataLabels.length} />/
-                {accData && accData.dataLabels.length}
+                {accData && 12}
                 {!accData && "..."}
               </div>
               <div id="totalBar" className="loadBar">
@@ -216,11 +264,7 @@ function App() {
               </div>
               <div id="activeTotalPercentage" className="counter">
                 <NumberAnimated
-                  data={
-                    accData &&
-                    (accData.dataLabels.length / accData.dataLabels.length) *
-                      100
-                  }
+                  data={accData && (accData.dataLabels.length / 12) * 100}
                 />{" "}
                 %
               </div>
@@ -232,7 +276,7 @@ function App() {
             <div id="barAndCounter">
               <div id="activeTotalCounter" className="counter">
                 <NumberAnimated data={tempData && tempData.dataLabels.length} />
-                /{tempData && tempData.dataLabels.length}
+                /{tempData && 8}
                 {!tempData && "..."}
               </div>
               <div id="totalBar" className="loadBar">
@@ -240,12 +284,8 @@ function App() {
               </div>
               <div id="activeTotalPercentage" className="counter">
                 <NumberAnimated
-                  data={
-                    tempData &&
-                    (tempData.dataLabels.length / tempData.dataLabels.length) *
-                      100
-                  }
-                />{" "}
+                  data={tempData && (tempData.dataLabels.length / 8) * 100}
+                />
                 %
               </div>
             </div>
@@ -286,7 +326,7 @@ function App() {
               ]}
               typeArr={["line", "line", "line", "line"]}
               colorArr={["#ff006f", "#f5a7a0", "#0fc26c", "#0062ff"]}
-              legendColor={theme ? "#00c3ff" : "#16a085"}
+              legendColor={theme ? "#00c3ff" : "#8676ff"}
               fillArr={[false, false, false, true]}
               fontSize={vw}
               gridColor={theme ? "#ffffff11" : "#00000022"}
@@ -297,7 +337,35 @@ function App() {
             />
           )}
         </div>
-        <div id="g4" className="graph"></div>
+        <div id="s2g2" className="graph">
+          {accAvg && accAvg.avgAbs && (
+            <ReactChart
+              title={`${accAvg.avgAbs[0].toFixed(3)} m/s\u00b2`}
+              titleAlign={"center"}
+              xLabel={["Average"]}
+              yLabelArr={[
+                "X-axis         ",
+                "Y-axis         ",
+                "Z-axis         ",
+                "Magnitude         ",
+              ]}
+              yAxisIDArr={["y", "y", "y", "y"]}
+              yDataArr={[accAvg.avgX, accAvg.avgY, accAvg.avgZ, accAvg.avgAbs]}
+              typeArr={["bar", "bar", "bar", "bar"]}
+              colorArr={["#ff006f", "#f5a7a0", "#0fc26c", "#0062ff"]}
+              legend={false}
+              legendColor={theme ? "#00c3ff" : "#8676ff"}
+              fillArr={[false, false, false, true]}
+              fontSize={vw}
+              gridColor={theme ? "#ffffff11" : "#00000022"}
+              gridArr={[1, 1]}
+              giveIndex={0}
+              grad={1}
+              forwardedRef={accRef}
+              offset={true}
+            />
+          )}
+        </div>
       </section>
       {/* <div id="g5" className="graph">
         <span>
@@ -326,7 +394,7 @@ function App() {
               yDataArr={[tempData.temp]}
               typeArr={["line"]}
               colorArr={["#ff006f"]}
-              legendColor={theme ? "#00c3ff" : "#16a085"}
+              legendColor={theme ? "#00c3ff" : "#8676ff"}
               fillArr={[true]}
               fontSize={vw}
               gridArr={[1, 1]}
@@ -337,9 +405,32 @@ function App() {
             />
           )}
         </div>
-        <div id="s3g2" className="graph"></div>
+        <div id="s3g2" className="graph">
+          {tempAvg && tempAvg.avgTemp && (
+            <ReactChart
+              title={`${tempAvg.avgTemp[0].toFixed(3)} ºC`}
+              titleAlign={"center"}
+              xLabel={["Average"]}
+              yLabelArr={["Temperature ºC         "]}
+              yAxisIDArr={["y"]}
+              yDataArr={[tempAvg.avgTemp]}
+              typeArr={["bar"]}
+              colorArr={["#ff006f"]}
+              legend={false}
+              legendColor={theme ? "#00c3ff" : "#8676ff"}
+              fillArr={[true]}
+              fontSize={vw}
+              gridArr={[1, 1]}
+              gridColor={theme ? "#ffffff11" : "#00000022"}
+              giveIndex={0}
+              grad={1}
+              forwardedRef={tempRef}
+              offset={true}
+            />
+          )}
+        </div>
       </section>
-      <footer>developed by @ehsan__ulhaq</footer>
+      {/* <footer>developed by @ehsan__ulhaq</footer> */}
     </div>
   );
 }
