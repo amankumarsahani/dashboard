@@ -7,12 +7,14 @@ Chart.register(...registerables);
 // Chart.global.defaults.font.family = "Exo 2, sans-serif";
 export default function ReactChart({
   title,
+  titleAlign = "start",
   xLabel,
   yLabelArr,
   yAxisIDArr,
   yDataArr,
   typeArr,
   colorArr,
+  legend = true,
   legendColor,
   fillArr,
   fontSize = 14,
@@ -87,8 +89,6 @@ export default function ReactChart({
   });
 
   let options = {
-    // defaultFontFamily: (Chart.defaults.global.defaultFontFamily =
-    //   "Exo 2, sans-serif"),
     responsive: true,
     maintainAspectRatio: false,
     scales: scales,
@@ -97,16 +97,17 @@ export default function ReactChart({
         display: title !== "",
         text: title,
         position: "top",
-        align: "start",
+        align: titleAlign,
         padding: 0,
         color: legendColor,
         font: {
-          family: "Dongle",
-          size: fontSize * 3,
-          weight: "300",
+          family: "Exo",
+          size: fontSize * 1.4,
+          weight: "400",
         },
       },
       legend: {
+        display: legend,
         position: "top",
         align: "end",
         padding: 1,
@@ -163,6 +164,19 @@ export default function ReactChart({
         hoverRadius: 10,
       },
     },
+    events: ["click", "mousemove"],
+    onClick: function (event) {
+      const chartArea = forwardedRef.current.chartArea;
+      const { left, right, top, bottom } = chartArea;
+      if (
+        event.x > left &&
+        event.x < right &&
+        event.y > top &&
+        event.y < bottom
+      ) {
+        setPra(!pra);
+      }
+    },
   };
 
   return (
@@ -173,7 +187,6 @@ export default function ReactChart({
         datasets: datasets,
       }}
       options={options}
-      onClick={() => setPra(!pra)}
     />
   );
 }
