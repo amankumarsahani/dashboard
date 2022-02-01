@@ -309,7 +309,7 @@ background-size: cover; */
     padding: calc(var(--f0)*1);
     height: max(44vh, 300px);
     display: grid;
-    grid-template-columns: 1.5fr 0.5fr;
+    grid-template-columns: 1.4fr 0.7fr;
     grid-template-rows: 1fr;
     grid-gap: var(--f0);
 }
@@ -339,9 +339,11 @@ background-size: cover; */
     margin: 0 calc(var(--f0)*1);
     padding: calc(var(--f0)*1);
     display: grid;
-    grid-template-columns: 1.5fr 0.5fr;
+    grid-template-columns: 1.4fr 0.7fr;
     grid-template-rows: 1fr;
     grid-gap: var(--f0);
+    height: 100%;
+    box-sizing: border-box;
 }
 
 #s3g1 {
