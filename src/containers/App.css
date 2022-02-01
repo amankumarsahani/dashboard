@@ -236,7 +236,7 @@ background-size: cover; */
 
 #totalBar {
     /* margin: 0 calc(var(--f0)*1); */
-    height: 10px;
+    height: 1vh;
     width: 80%;
     background-color: #8676ff44;
     border-radius: calc(var(--f0)*0.2);
@@ -280,7 +280,7 @@ background-size: cover; */
 
 #s1g2 #totalBar {
     width: 50%;
-    height: 6px;
+    height: 0.6vh;
 }
 
 #s1g2c1 {
@@ -486,10 +486,11 @@ font-size: calc(var(--f0)*1.4);
     animation: rotate 200ms;
 }
 
-footer {
+
+/* footer {
     text-align: center;
     font-size: 8px;
-}
+} */
 
 @keyframes rotate {
     from {
