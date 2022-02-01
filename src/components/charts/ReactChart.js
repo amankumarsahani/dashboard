@@ -81,7 +81,7 @@ export default function ReactChart({
       data: yData,
       backgroundColor: hexWithAlpha(colorArr[i], "33"),
       borderColor: colorArr[i],
-      borderWidth: 2,
+      borderWidth: 0.1 * fontSize,
       yAxisID: yAxisIDArr[i],
       tension: 0.4,
       fill: fillArr[i],
@@ -160,8 +160,8 @@ export default function ReactChart({
     },
     elements: {
       point: {
-        radius: pra * 3,
-        hoverRadius: 10,
+        radius: (pra * 3 * fontSize) / 16,
+        hoverRadius: fontSize * 0.6,
       },
     },
     events: ["click", "mousemove"],
