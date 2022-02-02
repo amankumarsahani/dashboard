@@ -13,7 +13,6 @@ export function makeTempData(
   arr.sort((a, b) => timeDateSorter(a, b, sortKey));
   let dataLabels = [];
   let temp = [];
-  console.log("TempDataFetched: ", arr.length);
   for (let i = 0; i < arr.length; i++) {
     dataLabels.push(arr[i][xKey]);
     temp.push(Math.abs(arr[i][retKey]) > 100 ? 0 : arr[i][retKey]);
@@ -30,7 +29,6 @@ export function makeTempDataFromQuery(
   arr.sort((a, b) => timeDateSorter(a, b, sortKey));
   let dataLabels = [];
   let temp = [];
-  console.log("TempDataFetched: ", arr.length);
   for (let i = 0; i < arr.length; i++) {
     dataLabels.push(moment(toDate(arr[i][xKey])).format("lll"));
     temp.push(Math.abs(arr[i][retKey]) > 100 ? 0 : arr[i][retKey]);
@@ -45,7 +43,6 @@ export function makeAccData(arr, xKey = "DeviceID", sortKey = "time_stmp") {
   let dataY = [];
   let dataZ = [];
   let abs = [];
-  console.log("AccDataFetched: ", arr.length);
   for (let i = 0; i < arr.length; i++) {
     dataLabels.push(arr[i][xKey]);
     dataX.push(arr[i].X_axis);
@@ -116,7 +113,6 @@ function timeDateSorter(_a, _b, key) {
 export const makeWaterData = (arr) => {
   arr.sort((a, b) => timeDateSorter(a, b, "Timestamp"));
   let [dataLabels, tds, cod, bod, ph, temp, ec] = [[], [], [], [], [], [], []];
-  console.log("WaterDataFetched: ", arr.length);
   for (let i = 0; i < arr.length; i++) {
     dataLabels.push(moment(toDate(arr[i]["Timestamp"])).format("lll"));
     tds.push(Math.abs(arr[i].TDS) > 1000 ? 0 : arr[i].TDS);
@@ -134,8 +130,6 @@ export const makeWaterData = (arr) => {
 };
 export const genRan = (min, max) => {
   let x = min + Math.floor(Math.random() * (max - min));
-  console.log(x);
-
   return x;
 };
 
@@ -164,4 +158,75 @@ export const Loading = ({ height = 30, width = 30 }) => {
       ></ReactLoading>
     </div>
   );
+};
+
+export const arrayEquals = (a, b) => {
+  return (
+    Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((val, index) => val === b[index])
+  );
+};
+
+export const _3d_to_2d = (x, y, z, theta, phi) => {
+  let rx = x * Math.cos(theta) - z * Math.sin(theta);
+  let ry =
+    y * Math.cos(phi) -
+    z * Math.sin(phi) * Math.cos(theta) -
+    x * Math.sin(phi) * Math.sin(theta);
+  return { x: rx, y: ry };
+};
+
+export const draw3d = (cnv, x, y, z) => {
+  const ctx = cnv.getContext("2d");
+
+  cnv.width = cnv.offsetWidth;
+  cnv.height = cnv.offsetHeight;
+
+  // cnv.style.backgroundColor = "black";
+  const o = { x: cnv.width / 3, y: cnv.height / 4 };
+
+  ctx.clearRect(0, 0, cnv.width, cnv.height);
+  let theta = Math.PI / 8;
+  let phi = -Math.PI / 12;
+  let p = _3d_to_2d(100, 0, 0, theta, phi);
+  ctx.beginPath();
+  ctx.arc(o.x, o.y, 5, 0, Math.PI * 2, true);
+  ctx.strokeStyle = "grey";
+  ctx.stroke();
+
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(o.x, o.y);
+  ctx.lineTo(o.x + p.x, o.y + p.y);
+  ctx.strokeStyle = "red";
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(o.x, o.y);
+  p = _3d_to_2d(0, 100, 0, theta, phi);
+  ctx.lineTo(o.x + p.x, o.y + p.y);
+  ctx.strokeStyle = "orange";
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(o.x, o.y);
+  p = _3d_to_2d(0, 0, 100, theta, phi);
+  ctx.lineTo(o.x + p.x, o.y + p.y);
+  ctx.strokeStyle = "lime";
+  ctx.stroke();
+
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  p = _3d_to_2d(x * 10, z * 10, y * 10, theta, phi);
+  ctx.moveTo(o.x, o.y);
+  ctx.lineTo(o.x + p.x, o.y + p.y);
+  ctx.strokeStyle = "#00c3ff";
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(o.x + p.x, o.y + p.y, 5, 0, Math.PI * 2, true);
+  ctx.fillStyle = "#00c3ff";
+  ctx.fill();
 };
