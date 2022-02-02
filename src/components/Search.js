@@ -111,7 +111,7 @@ export default function Search({
   return (
     <div id="SearchContainer">
       <div className="searchResult">
-        {!accOrTempData.dataLabels && <Loading />}
+        {!accOrTempData.dataLabels && <Loading theme={theme} />}
         {sensor === "acc" &&
           accOrTempData.abs &&
           accOrTempData.abs.length !== 0 && (
@@ -172,7 +172,7 @@ export default function Search({
           <span>Search Device</span>
           {!responded && (
             <span className="loading">
-              <Loading height={24} width={24} />
+              <Loading theme={theme} height={24} width={24} />
             </span>
           )}
         </div>

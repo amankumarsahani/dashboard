@@ -140,7 +140,7 @@ export const NumberAnimated = ({ data, dig = 0 }) => {
   return <AnimatedNumber value={data} formatValue={formatValue} />;
 };
 
-export const Loading = ({ height = 30, width = 30 }) => {
+export const Loading = ({ height = 30, width = 30, theme }) => {
   return (
     <div
       style={{
@@ -152,7 +152,7 @@ export const Loading = ({ height = 30, width = 30 }) => {
     >
       <ReactLoading
         type={"bars"}
-        color={"#8676ff"}
+        color={theme ? "#00c3ff" : "#8676ff"}
         width={width}
         height={height}
       ></ReactLoading>

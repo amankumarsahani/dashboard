@@ -341,7 +341,7 @@ function App() {
         <div id="s2g1" className="graph">
           {/* <div className="chartTitle">Accelerometer m/s{"\u00b2"}</div> */}
           {!accData ? (
-            <Loading />
+            <Loading theme={theme} />
           ) : (
             <ReactChart
               title={""}
@@ -501,7 +501,7 @@ function App() {
         <div id="s3g1" className="graph">
           {/* <div className="chartTitle">Temperature ºC</div> */}
           {!tempData ? (
-            <Loading />
+            <Loading theme={theme} />
           ) : (
             <ReactChart
               title={""}

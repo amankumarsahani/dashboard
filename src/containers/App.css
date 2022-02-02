@@ -137,7 +137,7 @@ background-size: cover; */
 #themeToggle {
     background-color: var(--theme-icon-color);
     mask: var(--theme-icon) no-repeat center;
-    width: calc(var(--f0)*1.8);
+    width: calc(var(--f0)*1.5);
     transition: mask 500ms ease-in-out;
 }
 
@@ -146,8 +146,8 @@ background-size: cover; */
 }
 
 #themeToggle div {
-    width: calc(var(--f0)*2.5);
-    height: calc(var(--f0)*2.5);
+    width: calc(var(--f0)*2);
+    height: calc(var(--f0)*2);
 }
 
 #sec1Header {
