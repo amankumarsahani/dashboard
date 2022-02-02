@@ -8,6 +8,7 @@ import Refresh from "../icons/refresh.svg";
 import Search from "../components/Search.js";
 import ReactChart from "../components/charts/ReactChart";
 import moment from "moment";
+import { Loading, arrayEquals, draw3d, _3d_to_2d } from "../utils.js";
 
 function App() {
   const url =
@@ -17,14 +18,36 @@ function App() {
   const [accData, setAccData] = useState(null);
   const [tempData, setTempData] = useState(null);
   const [interv, setInterv] = useState(60);
-  const [theme, setTheme] = useState(0);
+  const [theme, setTheme] = useState(1);
   const searchRef = useRef(null);
   const accRef = useRef(null);
   const tempRef = useRef(null);
   const [accAvg, setAccAvg] = useState({});
   const [tempAvg, setTempAvg] = useState({});
-
   const [searchId, setSearchId] = useState("c3:83:0c:de:ae:07");
+  const [avgOrSel, setAvgOrSel] = useState(true);
+
+  const [point1, setPoint1] = useState({});
+  const [accPoint, setAccPoint] = useState({});
+
+  useEffect(() => {
+    if (!accData) return;
+    setAvgOrSel(false);
+
+    setAccPoint({
+      l: accData.dataLabels[point1[0]],
+      x: accData.dataX[point1[0]],
+      y: accData.dataY[point1[0]],
+      z: accData.dataZ[point1[0]],
+      abs: accData.abs[point1[0]],
+    });
+  }, [point1]);
+
+  useEffect(() => {
+    if (!accPoint) return;
+    const cnv = document.getElementById("accCanvas");
+    draw3d(cnv, accPoint.x, accPoint.y, accPoint.z);
+  }, [accPoint]);
 
   useEffect(() => {
     if (!accData || !tempData) return;
@@ -44,7 +67,6 @@ function App() {
       avgZ: [avgZ / len],
       avgAbs: [avgAbs / len],
     });
-    console.log(accAvg);
 
     len = tempData.dataLabels.length;
     let avgTemp = 0;
@@ -53,6 +75,17 @@ function App() {
       avgTemp: [avgTemp / len],
     });
   }, [accData, tempData]);
+
+  useEffect(() => {
+    setAvgOrSel(true);
+    accAvg.avgX &&
+      draw3d(
+        document.getElementById("accCanvas"),
+        accAvg.avgX[0],
+        accAvg.avgY[0],
+        accAvg.avgZ[0]
+      );
+  }, [accAvg]);
 
   const handleIntervalChange = (e) => {
     setInterv(e.target.value);
@@ -307,7 +340,9 @@ function App() {
       <section className="sec2">
         <div id="s2g1" className="graph">
           {/* <div className="chartTitle">Accelerometer m/s{"\u00b2"}</div> */}
-          {accData && (
+          {!accData ? (
+            <Loading />
+          ) : (
             <ReactChart
               title={""}
               xLabel={accData.dataLabels}
@@ -334,11 +369,92 @@ function App() {
               giveIndex={1}
               grad={1}
               forwardedRef={accRef}
+              setPoint={setPoint1}
+              clickable={false}
             />
           )}
         </div>
         <div id="s2g2" className="graph">
-          {accAvg && accAvg.avgAbs && (
+          <div className="title">
+            {avgOrSel ? <span>{"Average"}</span> : <span>{accPoint.l}</span>}
+            {!avgOrSel && (
+              <span
+                id="button"
+                onClick={() => {
+                  setAvgOrSel(true);
+                  accAvg.avgX &&
+                    draw3d(
+                      document.getElementById("accCanvas"),
+                      accAvg.avgX[0],
+                      accAvg.avgY[0],
+                      accAvg.avgZ[0]
+                    );
+                }}
+              >
+                average
+              </span>
+            )}
+          </div>
+          <div className="avgData">
+            <span>Magnitude :</span>
+            <span className="computed">
+              {avgOrSel
+                ? accAvg.avgAbs && accAvg.avgAbs[0].toFixed(3)
+                : accPoint.abs && accPoint.abs.toFixed(3)}{" "}
+              m/s{"\u00b2"}
+            </span>
+            <span>
+              <span
+                className={`arrow ${
+                  avgOrSel
+                    ? accAvg.avgAbs && accAvg.avgAbs[0] > 9.801
+                      ? "up"
+                      : "down"
+                    : accPoint.abs > 9.801
+                    ? "up"
+                    : "down"
+                }`}
+              >
+                {avgOrSel ? (
+                  accAvg.avgAbs && accAvg.avgAbs[0] > 9.801 ? (
+                    <span>&#9650;</span>
+                  ) : (
+                    <span>&#9660;</span>
+                  )
+                ) : accPoint.abs > 9.801 ? (
+                  <span>&#9650;</span>
+                ) : (
+                  <span>&#9660;</span>
+                )}
+                &nbsp;
+              </span>
+              <span className="computed">
+                {avgOrSel
+                  ? accAvg.avgAbs &&
+                    (((9.801 - accAvg.avgAbs[0]) / 9.801) * 100).toFixed(1)
+                  : ((Math.abs(9.801 - accPoint.abs) / 9.801) * 100).toFixed(1)}
+                %
+              </span>
+            </span>
+            <span id="x">X-axis : &nbsp; &nbsp; &nbsp; &nbsp;</span>
+            <span id="xc" className="computed">
+              {avgOrSel ? accAvg.avgX && accAvg.avgX[0].toFixed(3) : accPoint.x}{" "}
+              m/s{"\u00b2"}
+            </span>
+            <span id="y"> Y-axis : &nbsp;</span>
+            <span id="yc" className="computed">
+              {avgOrSel ? accAvg.avgY && accAvg.avgY[0].toFixed(3) : accPoint.y}{" "}
+              m/s{"\u00b2"}
+            </span>
+            <span id="z"> Z-axis : &nbsp; &nbsp; &nbsp; &nbsp;</span>
+            <span id="zc" className="computed">
+              {avgOrSel ? accAvg.avgZ && accAvg.avgZ[0].toFixed(3) : accPoint.z}{" "}
+              m/s{"\u00b2"}
+            </span>
+            <canvas id="accCanvas"></canvas>
+          </div>
+
+          {/* {accAvg && accAvg.avgAbs && (
             <ReactChart
               title={`${accAvg.avgAbs[0].toFixed(3)} m/s\u00b2`}
               titleAlign={"center"}
@@ -361,10 +477,9 @@ function App() {
               gridArr={[1, 1]}
               giveIndex={0}
               grad={1}
-              forwardedRef={accRef}
               offset={true}
             />
-          )}
+          )} */}
         </div>
       </section>
       {/* <div id="g5" className="graph">
@@ -385,7 +500,9 @@ function App() {
       <section className="sec3">
         <div id="s3g1" className="graph">
           {/* <div className="chartTitle">Temperature ºC</div> */}
-          {tempData && (
+          {!tempData ? (
+            <Loading />
+          ) : (
             <ReactChart
               title={""}
               xLabel={tempData.dataLabels}
@@ -402,11 +519,14 @@ function App() {
               giveIndex={1}
               grad={1}
               forwardedRef={tempRef}
+              clickable={false}
             />
           )}
         </div>
         <div id="s3g2" className="graph">
-          {tempAvg && tempAvg.avgTemp && (
+          {/* <div className="title">Canvas</div> */}
+
+          {/* {tempAvg && tempAvg.avgTemp && (
             <ReactChart
               title={`${tempAvg.avgTemp[0].toFixed(3)} ºC`}
               titleAlign={"center"}
@@ -424,10 +544,9 @@ function App() {
               gridColor={theme ? "#ffffff11" : "#00000022"}
               giveIndex={0}
               grad={1}
-              forwardedRef={tempRef}
               offset={true}
             />
-          )}
+          )} */}
         </div>
       </section>
       {/* <footer>developed by @ehsan__ulhaq</footer> */}
@@ -436,12 +555,3 @@ function App() {
 }
 
 export default App;
-
-function arrayEquals(a, b) {
-  return (
-    Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index])
-  );
-}

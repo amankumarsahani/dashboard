@@ -7,6 +7,7 @@ import {
   makeAccDataFromQuery,
   makeTempDataFromQuery,
   Loading,
+  arrayEquals,
 } from "../utils.js";
 
 export default function Search({
@@ -110,6 +111,7 @@ export default function Search({
   return (
     <div id="SearchContainer">
       <div className="searchResult">
+        {!accOrTempData.dataLabels && <Loading />}
         {sensor === "acc" &&
           accOrTempData.abs &&
           accOrTempData.abs.length !== 0 && (
@@ -225,20 +227,5 @@ export default function Search({
         </form>
       </div>
     </div>
-  );
-}
-
-function arrayEquals(a, b) {
-  console.log(
-    Array.isArray(a),
-    Array.isArray(b),
-    a.length === b.length,
-    a.every((val, index) => val === b[index])
-  );
-  return (
-    Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index])
   );
 }

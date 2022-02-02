@@ -1,7 +1,7 @@
 import { Chart, registerables } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Line, getDatasetAtEvent, getElementAtEvent } from "react-chartjs-2";
 import { hexWithAlpha } from "../../utils.js";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 Chart.register(...registerables);
 // Chart.global.defaults.font.family = "Exo 2, sans-serif";
@@ -22,7 +22,9 @@ export default function ReactChart({
   gridColor = "#ffffff11",
   giveIndex = 0,
   offset = false,
-  forwardedRef,
+  forwardedRef = null,
+  setPoint = null,
+  clickable = true,
 }) {
   const [pra, setPra] = useState(1);
   let scales = {
@@ -98,7 +100,7 @@ export default function ReactChart({
         text: title,
         position: "top",
         align: titleAlign,
-        padding: 0,
+        padding: fontSize * 0.8,
         color: legendColor,
         font: {
           family: "Exo",
@@ -166,6 +168,8 @@ export default function ReactChart({
     },
     events: ["click", "mousemove"],
     onClick: function (event) {
+      if (!clickable) return;
+      if (!forwardedRef) return;
       const chartArea = forwardedRef.current.chartArea;
       const { left, right, top, bottom } = chartArea;
       if (
@@ -178,7 +182,12 @@ export default function ReactChart({
       }
     },
   };
-
+  const onclcl = (event) => {
+    const ele = getElementAtEvent(forwardedRef.current, event);
+    if (!ele.length) return;
+    if (setPoint === null) return;
+    setPoint([ele[0].index, Math.random()]);
+  };
   return (
     <Line
       ref={forwardedRef}
@@ -187,6 +196,7 @@ export default function ReactChart({
         datasets: datasets,
       }}
       options={options}
+      onClick={onclcl}
     />
   );
 }
