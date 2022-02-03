@@ -29,6 +29,7 @@ function App() {
 
   const [point1, setPoint1] = useState({});
   const [accPoint, setAccPoint] = useState({});
+  const [refreshMenu, setRefreshMenu] = useState(false);
 
   useEffect(() => {
     if (!accData) return;
@@ -88,7 +89,9 @@ function App() {
   }, [accAvg]);
 
   const handleIntervalChange = (e) => {
-    setInterv(e.target.value);
+    if (e.target.value > 60) setInterv(60);
+    else if (e.target.value <= 0) setInterv(1);
+    else setInterv(e.target.value);
   };
 
   useEffect(() => {
@@ -128,16 +131,16 @@ function App() {
     });
   }, [refresh]);
 
-  document.getElementById("intervalInput") &&
-    (document.getElementById("intervalInput").oninput = function () {
-      var value = ((this.value - this.min) / (this.max - this.min)) * 100;
-      this.style.background =
-        "linear-gradient(to right, #16a085 0%, #16a085 " +
-        value +
-        "%, #fff " +
-        value +
-        "%, #fff 100%)";
-    });
+  // document.getElementById("intervalInput") &&
+  //   (document.getElementById("intervalInput").oninput = function () {
+  //     var value = ((this.value - this.min) / (this.max - this.min)) * 100;
+  //     this.style.background =
+  //       "linear-gradient(to right, #16a085 0%, #16a085 " +
+  //       value +
+  //       "%, #fff " +
+  //       value +
+  //       "%, #fff 100%)";
+  //   });
 
   // document.getElementById("activeBar").style.width = `${
   //   accData && accData.dataLabels.length / accData.dataLabels.length
@@ -166,22 +169,53 @@ function App() {
     <div className={`App ${theme ? "dark" : "light"}`}>
       <header className="App-header">
         <div>SENSOR &nbsp; NODE &nbsp; NETWORK</div>
-        <div className="options">
+        <div
+          className="options"
+          style={{
+            width: `calc(var(--f0)*${refreshMenu ? "11" : "8"})`,
+          }}
+        >
           <div id="themeToggle" onClick={() => setTheme(!theme)}>
             <div>{/* div neccessary to size the themeToggle icon */}</div>
           </div>
-
-          <img
-            id="refresh"
-            src={Refresh}
-            alt="img"
-            onClick={() => {
-              setRefresh(!refresh);
-              console.log("refreshed");
+          <div
+            id="refreshHolder"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
-          ></img>
-
-          {/* <Dropdown /> */}
+          >
+            <img
+              id="refreshIcon"
+              src={Refresh}
+              alt="img"
+              onClick={() => {
+                setRefresh(!refresh);
+                console.log("refreshed");
+              }}
+            ></img>
+            <span
+              id="refreshArrow"
+              onClick={() => {
+                setRefreshMenu(!refreshMenu);
+              }}
+            >
+              {refreshMenu ? <>&#9664;</> : <>&#9654;</>}
+            </span>
+            <input
+              style={{
+                display: refreshMenu ? "inline" : "none",
+              }}
+              id="refreshInput"
+              type="number"
+              min="1"
+              max="60"
+              step="1"
+              value={interv}
+              onChange={handleIntervalChange}
+            />
+          </div>
         </div>
       </header>
 
@@ -219,7 +253,7 @@ function App() {
                   });
               }}
             >
-              SEARCH
+              {searchId}
             </div>
             <div
               id="mi2"

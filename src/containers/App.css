@@ -57,6 +57,7 @@
     --loader1: #00c3ff;
     --loader2: #00c3ff44;
     --c0: white;
+    --d0: #00000099;
 }
 
 .light {
@@ -90,6 +91,7 @@
     --loader1: #8676ff;
     --loader2: #8676ff44;
     --c0: black;
+    --d0: #ffffff99;
 }
 
 .App {
@@ -129,10 +131,15 @@ background-size: cover; */
 
 .options {
     display: flex;
-    width: calc(var(--f0)*6);
+    /* width: calc(var(--f0)*8); */
     align-items: center;
     justify-content: space-between;
 }
+
+
+/* .options:nth-child(n) {
+    padding: 0 2rem;
+} */
 
 #themeToggle {
     background-color: var(--theme-icon-color);
@@ -534,12 +541,13 @@ font-size: calc(var(--f0)*1.4);
     /* transition: background 1700ms ease-in-out, color 1200ms ease-in-out; */
 }
 
-#intervalInput {
+
+/* #intervalInput {
     background: linear-gradient(to right, #16a085 0%, #16a085 100%, #fff 100%, #fff 100%);
     border: solid calc(var(--f0)*0.1) #16a085;
     border-radius: calc(var(--f0)*0.5);
     height: calc(var(--f0)*0.2);
-    /* width: 90%; */
+    width: 90%;
     outline: none;
     transition: background 450ms ease-in;
     -webkit-appearance: none;
@@ -555,26 +563,42 @@ font-size: calc(var(--f0)*1.4);
     cursor: pointer;
     -webkit-appearance: none;
     margin-top: calc(-var(--f0)*0.4);
+} */
+
+#refreshHolder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-#intervalText {
-    /* color: var(--text-dull); */
-    color: var(--refersh-counter);
-    font-size: calc(var(--f0)*2.4);
+#refreshArrow {
+    cursor: pointer;
+    font-size: calc(var(--f0)*1);
+    padding: 0 calc(var(--f0)*1) 0 calc(var(--f0)*1);
 }
 
-#refresh {
+#refreshInput {
+    color: var(--c4);
+    background-color: var(--bg2);
+    text-align: center;
+    border: none;
+    border-radius: calc(var(--f0)*0.3);
+    font-size: calc(var(--f0)*1.4);
+    outline: none;
+}
+
+#refreshIcon {
     transform: rotate(0);
     height: calc(var(--f0)*2.2);
     filter: invert(var(--refresh-invert)) sepia(13%) saturate(3207%) hue-rotate(var(--refresh-hue-rotate)) brightness(95%) contrast(80%);
 }
 
-#refresh:hover {
+#refreshIcon:hover {
     filter: invert(var(--refresh-invert)) sepia(13%) saturate(3207%) hue-rotate(var(--refresh-hue-rotate)) brightness(100%) contrast(100%)
 }
 
-#refresh:active {
-    animation: rotate 200ms;
+#refreshIcon:active {
+    animation: rotate 400ms;
 }
 
 .computed {
@@ -605,6 +629,6 @@ font-size: calc(var(--f0)*1.4);
         transform: rotate(0deg);
     }
     to {
-        transform: rotate(180deg);
+        transform: rotate(359deg);
     }
 }
