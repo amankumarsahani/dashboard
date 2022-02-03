@@ -1,7 +1,7 @@
 import { Chart, registerables } from "chart.js";
-import { Line, getDatasetAtEvent, getElementAtEvent } from "react-chartjs-2";
+import { Line, getElementAtEvent } from "react-chartjs-2";
 import { hexWithAlpha } from "../../utils.js";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 Chart.register(...registerables);
 // Chart.global.defaults.font.family = "Exo 2, sans-serif";

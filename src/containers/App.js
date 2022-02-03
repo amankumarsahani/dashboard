@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+// eslint-disable-next-line react-hooks/exhaustive-deps
+
 import "./App.css";
 import React, { useState, useEffect, useRef } from "react";
 import { makeAccData, makeTempData, NumberAnimated } from "../utils.js";
@@ -23,7 +24,7 @@ function App() {
   const accRef = useRef(null);
   const tempRef = useRef(null);
   const [accAvg, setAccAvg] = useState({});
-  const [tempAvg, setTempAvg] = useState({});
+  // const [tempAvg, setTempAvg] = useState({});
   const [searchId, setSearchId] = useState("c3:83:0c:de:ae:07");
   const [avgOrSel, setAvgOrSel] = useState(true);
 
@@ -42,6 +43,7 @@ function App() {
       z: accData.dataZ[point1[0]],
       abs: accData.abs[point1[0]],
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [point1]);
 
   useEffect(() => {
@@ -69,12 +71,12 @@ function App() {
       avgAbs: [avgAbs / len],
     });
 
-    len = tempData.dataLabels.length;
-    let avgTemp = 0;
-    tempData.temp.forEach((temp) => (avgTemp += parseFloat(temp)));
-    setTempAvg({
-      avgTemp: [avgTemp / len],
-    });
+    // len = tempData.dataLabels.length;
+    // let avgTemp = 0;
+    // tempData.temp.forEach((temp) => (avgTemp += parseFloat(temp)));
+    // setTempAvg({
+    //   avgTemp: [avgTemp / len],
+    // });
   }, [accData, tempData]);
 
   useEffect(() => {
@@ -129,6 +131,7 @@ function App() {
         if (!tempData) setTempData(makeTempData(response.data.temp));
       } else handleNewResponse(response);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   // document.getElementById("intervalInput") &&

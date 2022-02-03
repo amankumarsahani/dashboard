@@ -37,7 +37,7 @@ export default function Search({
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    // if (searchField.length === 17) setId(searchField);
+    if (searchField.length === 17) setId(searchField);
     setLim(searchLim);
   };
 
