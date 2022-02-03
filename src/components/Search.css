@@ -94,6 +94,8 @@
     border: none;
     border-radius: calc(var(--f0)*0.5);
     color: var(--text-dull);
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 #searchFormInput::placeholder {

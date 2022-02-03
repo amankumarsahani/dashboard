@@ -17,6 +17,7 @@ export default function Search({
   vw,
   forwardedRef,
   setSearchId,
+  dropdownOptions,
 }) {
   const [searchField, setSearchField] = useState("");
   const [id, setId] = useState("c3:83:0c:de:ae:07");
@@ -28,6 +29,7 @@ export default function Search({
 
   const handleSearchChange = (e) => {
     setSearchField(e.target.value);
+    setId(e.target.value);
   };
   const handleLimChange = (e) => {
     setSearchLim(e.target.value);
@@ -191,13 +193,28 @@ export default function Search({
             />
             <span id="limCounter">{lim}</span>
           </div>
-          <input
+          {/* <input
             id="searchFormInput"
             type="text"
             value={searchField}
             placeholder={prev}
             onChange={handleSearchChange}
-          />
+          /> */}
+          <select
+            id="searchFormInput"
+            value={searchField}
+            onChange={handleSearchChange}
+          >
+            {dropdownOptions[0] &&
+              dropdownOptions[1] &&
+              dropdownOptions.map((type, i) =>
+                type.map((opt) => (
+                  <option label={`${opt}  ${i ? "Temp" : "Acc"}`} value={opt}>
+                    {opt}
+                  </option>
+                ))
+              )}
+          </select>
 
           <input id="searchFormSubmit" type="submit" value="Submit" />
           <div className="searchData">

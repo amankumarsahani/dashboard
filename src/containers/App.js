@@ -8,7 +8,7 @@ import Refresh from "../icons/refresh.svg";
 import Search from "../components/Search.js";
 import ReactChart from "../components/charts/ReactChart";
 import moment from "moment";
-import { Loading, arrayEquals, draw3d, _3d_to_2d } from "../utils.js";
+import { Loading, arrayEquals, draw3d } from "../utils.js";
 
 function App() {
   const url =
@@ -332,6 +332,10 @@ function App() {
             vw={vw}
             forwardedRef={searchRef}
             setSearchId={setSearchId}
+            dropdownOptions={[
+              accData && accData.dataLabels,
+              tempData && tempData.dataLabels,
+            ]}
           ></Search>
         </div>
       </section>
