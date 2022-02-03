@@ -209,7 +209,11 @@ export default function Search({
               dropdownOptions[1] &&
               dropdownOptions.map((type, i) =>
                 type.map((opt) => (
-                  <option label={`${opt}  ${i ? "Temp" : "Acc"}`} value={opt}>
+                  <option
+                    key={`${opt}${i}`}
+                    label={`${opt}  ${i ? "Temp" : "Acc"}`}
+                    value={opt}
+                  >
                     {opt}
                   </option>
                 ))
