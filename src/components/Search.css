@@ -87,20 +87,21 @@
     width: auto;
     border: none;
     font-size: calc(var(--f0)*1.2);
-    padding: calc(var(--f0)*0.5);
+    /* padding: calc(var(--f0)*0.5); */
     margin: calc(var(--f0)*0.5) 0;
-    background-color: var(--faint);
+    background-color: lime;
     text-decoration: none;
     border: none;
     border-radius: calc(var(--f0)*0.5);
-    color: var(--text-dull);
+    color: lime;
     -webkit-appearance: none;
     -moz-appearance: none;
 }
 
-#searchFormInput::placeholder {
+
+/* #searchFormInput::placeholder {
     color: rgba(var(--placeholder), 0.5);
-}
+} */
 
 #searchFormSubmit {
     display: none;

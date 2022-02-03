@@ -9,6 +9,7 @@ import {
   Loading,
   arrayEquals,
 } from "../utils.js";
+import ReactSelect from "./ReactSelect.js";
 
 export default function Search({
   url,
@@ -28,15 +29,15 @@ export default function Search({
   const [responded, setResponded] = useState(true);
 
   const handleSearchChange = (e) => {
-    setSearchField(e.target.value);
-    setId(e.target.value);
+    setSearchField(e.value);
+    setId(e.value);
   };
   const handleLimChange = (e) => {
     setSearchLim(e.target.value);
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (searchField.length === 17) setId(searchField);
+    // if (searchField.length === 17) setId(searchField);
     setLim(searchLim);
   };
 
@@ -94,7 +95,7 @@ export default function Search({
         } else handleNewResponse(response);
         setPrev(id);
         setSearchId(id);
-      }
+      } else console.log(`No Historic Data for Device ID: ${id}`);
       setResponded(true);
     });
   }, [id, url, refresh, lim]);
@@ -200,7 +201,7 @@ export default function Search({
             placeholder={prev}
             onChange={handleSearchChange}
           /> */}
-          <select
+          {/* <select
             id="searchFormInput"
             value={searchField}
             onChange={handleSearchChange}
@@ -218,8 +219,17 @@ export default function Search({
                   </option>
                 ))
               )}
-          </select>
-
+          </select> */}
+          {dropdownOptions[0] && dropdownOptions[1] && (
+            <ReactSelect
+              id="searchFormInput"
+              accOpts={dropdownOptions[0]}
+              tempOpts={dropdownOptions[1]}
+              handleChange={handleSearchChange}
+              them={theme}
+              vw={vw}
+            />
+          )}
           <input id="searchFormSubmit" type="submit" value="Submit" />
           <div className="searchData">
             <div>
