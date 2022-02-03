@@ -136,7 +136,7 @@ export default function Search({
                     : ["bar", "bar", "bar", "bar"]
                 }
                 colorArr={["#ff006f", "#f5a7a0", "#0fc26c", "#0062ff"]}
-                legendColor={theme ? "#00c3ff" : "#8676ff"}
+                legendColor={theme ? "#00c3ff" : "#6753ff"}
                 fillArr={[false, false, false, true]}
                 fontSize={vw}
                 gridArr={[0, 1]}
@@ -159,7 +159,7 @@ export default function Search({
                 typeArr={lim > 10 ? ["line"] : ["bar"]}
                 colorArr={["#ff006f"]}
                 legend={false}
-                legendColor={theme ? "#00c3ff" : "#8676ff"}
+                legendColor={theme ? "#00c3ff" : "#6753ff"}
                 fillArr={[true]}
                 fontSize={vw}
                 gridArr={[0, 1]}
