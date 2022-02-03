@@ -1,5 +1,4 @@
 import React from "react";
-
 import Select from "react-select";
 
 const ReactSelect = ({ accOpts, tempOpts, handleChange, them, vw }) => {
@@ -27,7 +26,7 @@ const ReactSelect = ({ accOpts, tempOpts, handleChange, them, vw }) => {
     justifyContent: "space-between",
   };
   const groupBadgeStyles = {
-    backgroundColor: them ? "#ffffff11" : "00000011",
+    // backgroundColor: them ? "#ffffff11" : "#00000011",
     borderRadius: vw * 0.3,
     color: "#16a085",
     display: "inline-block",
@@ -47,6 +46,11 @@ const ReactSelect = ({ accOpts, tempOpts, handleChange, them, vw }) => {
     option: (provided, state) => ({
       ...provided,
       color: state.isSelected ? (them ? "#00c3ff" : "#8676ff") : "#16a085",
+    }),
+    noOptionsMessage: (provided, state) => ({
+      ...provided,
+      color: "orange",
+      backgroundColor: them ? "#0c111a" : "white",
     }),
     groupHeading: (provided) => ({
       ...provided,
