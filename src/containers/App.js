@@ -2,7 +2,12 @@
 
 import "./App.css";
 import React, { useState, useEffect, useRef } from "react";
-import { makeAccData, makeTempData, NumberAnimated } from "../utils.js";
+import {
+  makeAccData,
+  makeTempData,
+  makeGpsData,
+  NumberAnimated,
+} from "../utils.js";
 import axios from "axios";
 import { saveAs } from "file-saver";
 import Refresh from "../icons/refresh.svg";
@@ -10,10 +15,16 @@ import Search from "../components/Search.js";
 import ReactChart from "../components/charts/ReactChart";
 import moment from "moment";
 import { Loading, arrayEquals, draw3d } from "../utils.js";
+import IoTMap from "../components/IoTMap.js";
 
 function App() {
   const url =
     "https://rtvab1na8b.execute-api.us-west-2.amazonaws.com/default/fetchDynamoDBdata";
+  const devUrl =
+    "https://tda5ud3u3e.execute-api.us-west-2.amazonaws.com/default/getTempAccData";
+  const [dev, setDev] = useState(false);
+  const [apiUrl, setApiUrl] = useState(url);
+
   const vw = (0.8 * window.innerWidth) / 100;
   const [refresh, setRefresh] = useState(false);
   const [accData, setAccData] = useState(null);
@@ -31,6 +42,13 @@ function App() {
   const [point1, setPoint1] = useState({});
   const [accPoint, setAccPoint] = useState({});
   const [refreshMenu, setRefreshMenu] = useState(false);
+
+  const [gpsData, setGpsData] = useState(null);
+
+  useEffect(() => {
+    if (dev) setApiUrl(devUrl);
+    else setApiUrl(url);
+  }, [dev]);
 
   useEffect(() => {
     if (!accData) return;
@@ -108,6 +126,7 @@ function App() {
   const handleNewResponse = (response) => {
     let ad = makeAccData(response.data.acc);
     let td = makeTempData(response.data.temp);
+    let gps = makeGpsData(response.data.acc, response.data.temp);
     if (
       !arrayEquals(ad.dataLabels, accData.dataLabels) ||
       !arrayEquals(ad.dataX, accData.dataX) ||
@@ -122,17 +141,25 @@ function App() {
     ) {
       setTempData(td);
     }
+    if (
+      !arrayEquals(gps.acc, gpsData.acc) ||
+      !arrayEquals(gps.temp, gpsData.temp)
+    ) {
+      setGpsData(makeGpsData(response.data.acc, response.data.temp));
+    }
   };
 
   useEffect(() => {
-    axios.get(url).then((response) => {
+    axios.get(apiUrl).then((response, err) => {
       if (!accData || !tempData) {
         if (!accData) setAccData(makeAccData(response.data.acc));
         if (!tempData) setTempData(makeTempData(response.data.temp));
+        if (!gpsData)
+          setGpsData(makeGpsData(response.data.acc, response.data.temp));
       } else handleNewResponse(response);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, [refresh, apiUrl]);
 
   // document.getElementById("intervalInput") &&
   //   (document.getElementById("intervalInput").oninput = function () {
@@ -588,9 +615,26 @@ function App() {
               offset={true}
             />
           )} */}
+          {accData && tempData && gpsData && (
+            <IoTMap gps={gpsData} acc={accData} temp={tempData} />
+          )}
         </div>
       </section>
-      {/* <footer>developed by @ehsan__ulhaq</footer> */}
+      <footer>
+        <span> developed by @ehsan__ulhaq</span>
+        <button
+          id="apiInput"
+          style={{
+            border: "0.1rem solid " + (dev ? "var(--text1)" : "var(--theme1)"),
+            color: dev ? "var(--text1)" : "grey",
+          }}
+          onClick={() => {
+            setDev(!dev);
+          }}
+        >
+          dev
+        </button>
+      </footer>
     </div>
   );
 }

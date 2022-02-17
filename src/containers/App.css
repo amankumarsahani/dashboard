@@ -406,7 +406,7 @@
     margin: 0 calc(var(--f0)*1);
     padding: calc(var(--f0)*1);
     display: grid;
-    grid-template-columns: 1.5fr 0.5fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
     grid-gap: var(--f0);
     height: 100%;
@@ -541,6 +541,30 @@
 
 .up {
     color: lime;
+}
+
+.leaflet-container {
+    height: 100%;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    margin: calc(var(--f0)*0.2) calc(var(--f0)*2);
+}
+
+#apiInput {
+    background-color: var(--theme1);
+    padding: calc(var(--f0)*0.1) calc(var(--f0)*0.5);
+    color: var(--text1);
+    border-radius: calc(var(--f0)*0.3);
+}
+
+#apiInput:hover {
+    /* background-color: var(--bg2); */
+    box-shadow: 0 0 calc(var(--f0)*0.2) var(--text1);
+    cursor: pointer;
 }
 
 @keyframes rotate {
