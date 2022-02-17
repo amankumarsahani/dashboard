@@ -11,6 +11,9 @@ import {
 } from "../utils.js";
 import ReactSelect from "./ReactSelect.js";
 
+// const S_KEY = "time_stamp";
+const S_KEY = "time_stmp";
+
 export default function Search({
   url,
   refresh,
@@ -44,7 +47,7 @@ export default function Search({
   const handleNewResponse = (response) => {
     if (sensor === "acc") {
       if (response.data.accOrTemp[0].Sensor === "Accelerometer") {
-        let atd = makeAccDataFromQuery(response.data.accOrTemp, "time_stmp");
+        let atd = makeAccDataFromQuery(response.data.accOrTemp, S_KEY);
         if (
           !arrayEquals(atd.dataLabels, accOrTempData.dataLabels) ||
           !arrayEquals(atd.abs, accOrTempData.abs) ||
@@ -54,13 +57,13 @@ export default function Search({
           setAccOrTempData(atd);
         }
       } else {
-        let atd = makeTempDataFromQuery(response.data.accOrTemp, "time_stmp");
+        let atd = makeTempDataFromQuery(response.data.accOrTemp, S_KEY);
         setSensor("temp");
         setAccOrTempData(atd);
       }
     } else {
       if (response.data.accOrTemp[0].Sensor === "Temperature") {
-        let atd = makeTempDataFromQuery(response.data.accOrTemp, "time_stmp");
+        let atd = makeTempDataFromQuery(response.data.accOrTemp, S_KEY);
         if (
           !arrayEquals(atd.dataLabels, accOrTempData.dataLabels) ||
           !arrayEquals(atd.temp, accOrTempData.temp)
@@ -68,7 +71,7 @@ export default function Search({
           setAccOrTempData(atd);
         }
       } else {
-        let atd = makeAccDataFromQuery(response.data.accOrTemp, "time_stmp");
+        let atd = makeAccDataFromQuery(response.data.accOrTemp, S_KEY);
         setSensor("acc");
         setAccOrTempData(atd);
       }
@@ -84,12 +87,12 @@ export default function Search({
           if (response.data.accOrTemp[0].Sensor === "Accelerometer") {
             setSensor("acc");
             setAccOrTempData(
-              makeAccDataFromQuery(response.data.accOrTemp, "time_stmp")
+              makeAccDataFromQuery(response.data.accOrTemp, S_KEY)
             );
           } else if (response.data.accOrTemp[0].Sensor === "Temperature") {
             setSensor("temp");
             setAccOrTempData(
-              makeTempDataFromQuery(response.data.accOrTemp, "time_stmp")
+              makeTempDataFromQuery(response.data.accOrTemp, S_KEY)
             );
           }
         } else handleNewResponse(response);

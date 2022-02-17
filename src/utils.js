@@ -4,10 +4,15 @@ import ReactLoading from "react-loading";
 
 import React from "react";
 
+// const UID = "unique_id";
+// const S_KEY = "time_stamp";
+const UID = "DeviceID";
+const S_KEY = "time_stmp";
+
 export function makeTempData(
   arr,
-  xKey = "DeviceID",
-  sortKey = "time_stmp",
+  xKey = UID,
+  sortKey = S_KEY,
   retKey = "Temperature_degC"
 ) {
   arr.sort((a, b) => timeDateSorter(a, b, sortKey));
@@ -22,8 +27,8 @@ export function makeTempData(
 
 export function makeTempDataFromQuery(
   arr,
-  xKey = "DeviceID",
-  sortKey = "time_stmp",
+  xKey = UID,
+  sortKey = S_KEY,
   retKey = "Value"
 ) {
   arr.sort((a, b) => timeDateSorter(a, b, sortKey));
@@ -36,7 +41,7 @@ export function makeTempDataFromQuery(
   return { dataLabels, temp };
 }
 
-export function makeAccData(arr, xKey = "DeviceID", sortKey = "time_stmp") {
+export function makeAccData(arr, xKey = UID, sortKey = S_KEY) {
   arr.sort((a, b) => timeDateSorter(a, b, sortKey));
   let dataLabels = [];
   let dataX = [];
@@ -61,8 +66,8 @@ export function makeAccData(arr, xKey = "DeviceID", sortKey = "time_stmp") {
 
 export function makeAccDataFromQuery(
   arr,
-  xKey = "DeviceID",
-  sortKey = "time_stmp",
+  xKey = UID,
+  sortKey = S_KEY,
   retKey = "Value"
 ) {
   arr.sort((a, b) => timeDateSorter(a, b, sortKey));
@@ -92,6 +97,21 @@ export function makeAccDataFromQuery(
     abs.push(x);
   }
   return { dataLabels, dataX, dataY, dataZ, abs };
+}
+
+export function makeGpsData(acc, temp, xKey = UID, sortKey = S_KEY) {
+  acc.sort((a, b) => timeDateSorter(a, b, sortKey));
+  temp.sort((a, b) => timeDateSorter(a, b, sortKey));
+  let gps = { acc: [], temp: [] };
+  for (let i = 0; i < acc.length; i++) {
+    if (!acc[i].gps) continue;
+    gps.acc.push({ lat: acc[i].gps.lat, lon: acc[i].gps.lon });
+  }
+  for (let i = 0; i < temp.length; i++) {
+    if (!temp[i].gps) continue;
+    gps.temp.push({ lat: temp[i].gps.lat, lon: temp[i].gps.lon });
+  }
+  return gps;
 }
 
 function toDate(a) {
