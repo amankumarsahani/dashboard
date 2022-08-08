@@ -24,7 +24,7 @@ export default function Search({
   dropdownOptions,
 }) {
   const [searchField, setSearchField] = useState("");
-  const [id, setId] = useState("c3:83:0c:de:ae:07");
+  const [id, setId] = useState("C6:2B:45:5F:71:FD");
   const [searchLim, setSearchLim] = useState(10);
   const [lim, setLim] = useState(10);
   const [accOrTempData, setAccOrTempData] = useState("");
@@ -32,6 +32,7 @@ export default function Search({
   const [responded, setResponded] = useState(true);
 
   const handleSearchChange = (e) => {
+    console.log(e);
     setSearchField(e.value);
     setId(e.value);
   };
@@ -77,12 +78,14 @@ export default function Search({
       }
     }
   };
-  const [prev, setPrev] = useState("c3:83:0c:de:ae:07");
+  const [prev, setPrev] = useState("C6:2B:45:5F:71:FD");
 
   useEffect(() => {
     setResponded(false);
-    axios.get(url + "?id=" + id + "&lim=" + lim).then((response) => {
-      if (response.data.accOrTemp.length !== 0) {
+    axios.get(url + "?sensorId=" + id + "&lim=" + lim).then((response) => {
+      console.log(url + "?sensorId=" + id + "&lim=" + lim);
+      console.log(response);
+      if (response.data!== 0) {
         if (!accOrTempData) {
           if (response.data.accOrTemp[0].Sensor === "Accelerometer") {
             setSensor("acc");

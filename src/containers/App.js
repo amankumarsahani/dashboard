@@ -21,10 +21,12 @@ function App() {
   const url =
     "https://rtvab1na8b.execute-api.us-west-2.amazonaws.com/default/fetchDynamoDBdata";
   const devUrl =
-    "https://tda5ud3u3e.execute-api.us-west-2.amazonaws.com/default/getTempAccData";
+    "https://c7fbibnkud.execute-api.us-west-2.amazonaws.com/read?data=acc";
+  const devUrltemp = 
+    "https://c7fbibnkud.execute-api.us-west-2.amazonaws.com/read?data=temp"
   const [dev, setDev] = useState(false);
   const [apiUrl, setApiUrl] = useState(url);
-
+  const [apiUrl2, setApiUrl2] = useState(url);
   const vw = (0.8 * window.innerWidth) / 100;
   const [refresh, setRefresh] = useState(false);
   const [accData, setAccData] = useState(null);
@@ -36,7 +38,7 @@ function App() {
   const tempRef = useRef(null);
   const [accAvg, setAccAvg] = useState({});
   // const [tempAvg, setTempAvg] = useState({});
-  const [searchId, setSearchId] = useState("c3:83:0c:de:ae:07");
+  const [searchId, setSearchId] = useState("C6:2B:45:5F:71:FD");
   const [avgOrSel, setAvgOrSel] = useState(true);
 
   const [point1, setPoint1] = useState({});
@@ -46,8 +48,14 @@ function App() {
   const [gpsData, setGpsData] = useState(null);
 
   useEffect(() => {
-    if (dev) setApiUrl(devUrl);
-    else setApiUrl(url);
+    if (dev) {
+      setApiUrl(devUrl);
+      setApiUrl2(devUrltemp)
+    }
+    else {
+      setApiUrl(url);
+      setApiUrl2(url);
+    }
   }, [dev]);
 
   useEffect(() => {
@@ -63,7 +71,7 @@ function App() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [point1]);
-
+  // console.log(accData);
   useEffect(() => {
     if (!accPoint) return;
     const cnv = document.getElementById("accCanvas");
@@ -124,9 +132,11 @@ function App() {
   }, [interv, refresh]);
 
   const handleNewResponse = (response) => {
-    let ad = makeAccData(response.data.acc);
-    let td = makeTempData(response.data.temp);
-    let gps = makeGpsData(response.data.acc, response.data.temp);
+    let ad = makeAccData(response.data);
+    let td = makeTempData(response.data); 
+    let gps = makeGpsData(response.data, response.data); 
+    console.log("gps",ad);
+    console.log("gpsss",td);
     if (
       !arrayEquals(ad.dataLabels, accData.dataLabels) ||
       !arrayEquals(ad.dataX, accData.dataX) ||
@@ -145,21 +155,36 @@ function App() {
       !arrayEquals(gps.acc, gpsData.acc) ||
       !arrayEquals(gps.temp, gpsData.temp)
     ) {
-      setGpsData(makeGpsData(response.data.acc, response.data.temp));
+      setGpsData(makeGpsData(response.data, response.data));
     }
   };
 
-  useEffect(() => {
-    axios.get(apiUrl).then((response, err) => {
+  useEffect(()=>{
+    const reqOne = axios.get(apiUrl);
+    const reqTwo = axios.get(apiUrl2);
+    
+    axios.all([reqOne, reqTwo]).then(axios.spread((...responses) => {
+      const responseOne = responses[0]
+      const responseTwo = responses[1]
+
+      console.log("1",responseOne);
+      console.log("2",responseTwo);
+      console.log(accData);
+
       if (!accData || !tempData) {
-        if (!accData) setAccData(makeAccData(response.data.acc));
-        if (!tempData) setTempData(makeTempData(response.data.temp));
+        if (!accData) setAccData(makeAccData(responseOne.data));
+        if (!tempData) setTempData(makeTempData(responseTwo.data)); //response.data
         if (!gpsData)
-          setGpsData(makeGpsData(response.data.acc, response.data.temp));
-      } else handleNewResponse(response);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh, apiUrl]);
+          setGpsData(makeGpsData(responseOne.data, responseTwo.data));  //response.data
+      } 
+      else 
+        handleNewResponse(responseOne);
+        handleNewResponse(responseTwo);
+    })).catch(errors => {
+      console.log(errors);
+    })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[refresh, apiUrl,apiUrl2])
 
   // document.getElementById("intervalInput") &&
   //   (document.getElementById("intervalInput").oninput = function () {
@@ -323,18 +348,19 @@ function App() {
                 data={
                   accData &&
                   tempData &&
-                  accData.dataLabels.length + tempData.dataLabels.length
+                  ([...new Set(accData.dataLabels)].length + [...new Set(tempData.dataLabels)].length)
                 }
               />
               /{12 + 8}
               {!accData && !tempData && "..."}
             </div>
             <div>
+            
               <NumberAnimated
                 data={
                   accData &&
                   tempData &&
-                  ((accData.dataLabels.length + tempData.dataLabels.length) /
+                  (([...new Set(accData.dataLabels)].length + [...new Set(tempData.dataLabels)].length) /
                     (12 + 8)) *
                     100
                 }
@@ -352,7 +378,7 @@ function App() {
             <span className="counterText">Accelerometer</span>
             <div id="barAndCounter">
               <div id="activeTotalCounter" className="counter">
-                <NumberAnimated data={accData && accData.dataLabels.length} />/
+                <NumberAnimated data={accData && [...new Set(accData.dataLabels)].length} />/
                 {accData && 12}
                 {!accData && "..."}
               </div>
@@ -361,7 +387,7 @@ function App() {
               </div>
               <div id="activeTotalPercentage" className="counter">
                 <NumberAnimated
-                  data={accData && (accData.dataLabels.length / 12) * 100}
+                  data={accData && ([...new Set(accData.dataLabels)].length/ 12) * 100}
                 />{" "}
                 %
               </div>
@@ -372,7 +398,7 @@ function App() {
 
             <div id="barAndCounter">
               <div id="activeTotalCounter" className="counter">
-                <NumberAnimated data={tempData && tempData.dataLabels.length} />
+                <NumberAnimated data={tempData && [...new Set(tempData.dataLabels)].length} />
                 /{tempData && 8}
                 {!tempData && "..."}
               </div>
@@ -381,7 +407,7 @@ function App() {
               </div>
               <div id="activeTotalPercentage" className="counter">
                 <NumberAnimated
-                  data={tempData && (tempData.dataLabels.length / 8) * 100}
+                  data={tempData && ([...new Set(tempData.dataLabels)].length / 8) * 100}
                 />
                 %
               </div>
@@ -390,7 +416,7 @@ function App() {
         </div>
         <div id="g2">
           <Search
-            url={url}
+            url={apiUrl}
             refresh={refresh}
             theme={theme}
             vw={vw}

@@ -6,8 +6,8 @@ import React from "react";
 
 // const UID = "unique_id";
 // const S_KEY = "time_stamp";
-const UID = "DeviceID";
-const S_KEY = "time_stmp";
+const UID = "sensorId";
+const S_KEY = "logTime";
 
 export function makeTempData(
   arr,
@@ -20,7 +20,7 @@ export function makeTempData(
   let temp = [];
   for (let i = 0; i < arr.length; i++) {
     dataLabels.push(arr[i][xKey]);
-    temp.push(Math.abs(arr[i][retKey]) > 100 ? 0 : arr[i][retKey]);
+    temp.push(Math.abs(arr[i].temp > 100 ? 0 : arr[i].temp));
   }
   return { dataLabels, temp };
 }
@@ -36,12 +36,13 @@ export function makeTempDataFromQuery(
   let temp = [];
   for (let i = 0; i < arr.length; i++) {
     dataLabels.push(moment(toDate(arr[i][xKey])).format("lll"));
-    temp.push(Math.abs(arr[i][retKey]) > 100 ? 0 : arr[i][retKey]);
+    temp.push(Math.abs(arr[i].temp) > 100 ? 0 : arr[i].temp);
   }
   return { dataLabels, temp };
 }
 
 export function makeAccData(arr, xKey = UID, sortKey = S_KEY) {
+
   arr.sort((a, b) => timeDateSorter(a, b, sortKey));
   let dataLabels = [];
   let dataX = [];
@@ -50,13 +51,13 @@ export function makeAccData(arr, xKey = UID, sortKey = S_KEY) {
   let abs = [];
   for (let i = 0; i < arr.length; i++) {
     dataLabels.push(arr[i][xKey]);
-    dataX.push(arr[i].X_axis);
-    dataY.push(arr[i].Y_axis);
-    dataZ.push(arr[i].Z_axis);
+    dataX.push(arr[i].x);
+    dataY.push(arr[i].y);
+    dataZ.push(arr[i].z);
     let x = Math.pow(
-      Math.pow(arr[i].X_axis, 2) +
-        Math.pow(arr[i].Y_axis, 2) +
-        Math.pow(arr[i].Z_axis, 2),
+      Math.pow(arr[i].x, 2) +
+        Math.pow(arr[i].y, 2) +
+        Math.pow(arr[i].z, 2),
       0.5
     );
     abs.push(x);
@@ -139,7 +140,7 @@ export const makeWaterData = (arr) => {
     cod.push(Math.abs(arr[i].COD) > 100 ? 0 : arr[i].COD);
     bod.push(Math.abs(arr[i].BOD) > 100 ? 0 : arr[i].BOD);
     ph.push(Math.abs(arr[i].pH) > 20 ? 0 : arr[i].pH);
-    temp.push(Math.abs(arr[i].Temperature) > 70 ? 0 : arr[i].Temperature);
+    temp.push(Math.abs(arr[i].temp) > 70 ? 0 : arr[i].temp);
     ec.push(
       Math.abs(arr[i]["Electro-conductivity"]) > 100
         ? 0
@@ -156,6 +157,7 @@ export const genRan = (min, max) => {
 export const hexWithAlpha = (hex, alpha) => `${hex}${alpha}`;
 
 export const NumberAnimated = ({ data, dig = 0 }) => {
+  console.log(data);
   const formatValue = (data) => data.toFixed(dig);
   return <AnimatedNumber value={data} formatValue={formatValue} />;
 };
