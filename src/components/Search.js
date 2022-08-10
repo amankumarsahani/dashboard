@@ -32,7 +32,6 @@ export default function Search({
   const [responded, setResponded] = useState(true);
 
   const handleSearchChange = (e) => {
-    console.log(e);
     setSearchField(e.value);
     setId(e.value);
   };
@@ -83,8 +82,8 @@ export default function Search({
   useEffect(() => {
     setResponded(false);
     axios.get(url + "?sensorId=" + id + "&lim=" + lim).then((response) => {
-      console.log(url + "?sensorId=" + id + "&lim=" + lim);
-      console.log(response);
+      // console.log(url + "?sensorId=" + id + "&lim=" + lim);
+      // console.log(response);
       if (response.data!== 0) {
         if (!accOrTempData) {
           if (response.data.accOrTemp[0].Sensor === "Accelerometer") {
@@ -236,6 +235,7 @@ export default function Search({
               vw={vw}
             />
           )}
+          
           <input id="searchFormSubmit" type="submit" value="Submit" />
           <div className="searchData">
             <div>

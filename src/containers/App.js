@@ -15,7 +15,7 @@ import Search from "../components/Search.js";
 import ReactChart from "../components/charts/ReactChart";
 import moment from "moment";
 import { Loading, arrayEquals, draw3d } from "../utils.js";
-import IoTMap from "../components/IoTMap.js";
+// import IoTMap from "../components/IoTMap.js";
 
 function App() {
   const url =
@@ -71,7 +71,6 @@ function App() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [point1]);
-  // console.log(accData);
   useEffect(() => {
     if (!accPoint) return;
     const cnv = document.getElementById("accCanvas");
@@ -79,16 +78,18 @@ function App() {
   }, [accPoint]);
 
   useEffect(() => {
-    if (!accData || !tempData) return;
+    if (!accData || !tempData) return
     let len = accData.dataLabels.length;
     let avgX = 0;
     let avgY = 0;
     let avgZ = 0;
     let avgAbs = 0;
-    accData.dataX.forEach((x) => (avgX += parseFloat(x)));
-    accData.dataY.forEach((y) => (avgY += parseFloat(y)));
-    accData.dataZ.forEach((z) => (avgZ += parseFloat(z)));
-    accData.abs.forEach((abs) => (avgAbs += parseFloat(abs)));
+
+    // accData.dataX.forEach((x) => (avgX+= parseFloat(x)));
+    accData.dataX.forEach((x,i)=>{ if(!isNaN(x)){avgX += x;}})
+    accData.dataY.forEach((y) => { if(!isNaN(y)){avgY += y;}});
+    accData.dataZ.forEach((z) => { if(!isNaN(z)){avgZ += z;}});
+    accData.abs.forEach((abs) => { if(!isNaN(abs)){avgAbs += abs;}});
 
     setAccAvg({
       avgX: [avgX / len],
@@ -107,6 +108,7 @@ function App() {
 
   useEffect(() => {
     setAvgOrSel(true);
+
     accAvg.avgX &&
       draw3d(
         document.getElementById("accCanvas"),
@@ -135,8 +137,7 @@ function App() {
     let ad = makeAccData(response.data);
     let td = makeTempData(response.data); 
     let gps = makeGpsData(response.data, response.data); 
-    console.log("gps",ad);
-    console.log("gpsss",td);
+
     if (
       !arrayEquals(ad.dataLabels, accData.dataLabels) ||
       !arrayEquals(ad.dataX, accData.dataX) ||
@@ -169,7 +170,6 @@ function App() {
 
       console.log("1",responseOne);
       console.log("2",responseTwo);
-      console.log(accData);
 
       if (!accData || !tempData) {
         if (!accData) setAccData(makeAccData(responseOne.data));
@@ -204,18 +204,18 @@ function App() {
     if (document.querySelector("#activeBar")) {
       if (!accData || !tempData) return;
       document.querySelector("#activeBar").style.width = `${
-        ((accData.dataLabels.length + tempData.dataLabels.length) / (12 + 8)) *
+        (([...new Set(accData.dataLabels)].length + [...new Set(tempData.dataLabels)].length) / (12 + 8)) *
         100
       }%`;
     }
     if (document.querySelector("#s1g2c1 #activeBar")) {
       document.querySelector("#s1g2c1 #activeBar").style.width = `${
-        (accData.dataLabels.length / 12) * 100
+        ([...new Set(accData.dataLabels)].length / 12) * 100
       }%`;
     }
     if (document.querySelector("#s1g2c2 #activeBar")) {
       document.querySelector("#s1g2c2 #activeBar").style.width = `${
-        (tempData.dataLabels.length / 8) * 100
+        ([...new Set(tempData.dataLabels)].length / 8) * 100
       }%`;
     }
   };
@@ -224,15 +224,34 @@ function App() {
     <div className={`App ${theme ? "dark" : "light"}`}>
       <header className="App-header">
         <div>SENSOR &nbsp; NODE &nbsp; NETWORK</div>
+       
+        <button
+          id="apiInput"
+          style={{
+            border: "0.1rem solid " + (dev ? "var(--text1)" : "var(--theme1)"),
+            padding:"0.5rem 1rem",
+            fontWeight: "bold",
+            color: dev ? "red" : "green",
+          }}
+          onClick={() => {
+            setDev(!dev);
+          }}
+        >
+          {dev ? "    HIDE DATA    " : "    SHOW DATA    "}
+        </button>
+
         <div
           className="options"
           style={{
             width: `calc(var(--f0)*${refreshMenu ? "11" : "8"})`,
           }}
         >
+        
           <div id="themeToggle" onClick={() => setTheme(!theme)}>
             <div>{/* div neccessary to size the themeToggle icon */}</div>
           </div>
+          
+          
           <div
             id="refreshHolder"
             style={{
@@ -423,8 +442,8 @@ function App() {
             forwardedRef={searchRef}
             setSearchId={setSearchId}
             dropdownOptions={[
-              accData && accData.dataLabels,
-              tempData && tempData.dataLabels,
+              accData && [...new Set(accData.dataLabels)],
+              tempData && [...new Set(tempData.dataLabels)],
             ]}
           ></Search>
         </div>
@@ -617,7 +636,9 @@ function App() {
             />
           )}
         </div>
-        <div id="s3g2" className="graph">
+
+
+        {/* <div id="s3g2" className="graph"> */}
           {/* <div className="title">Canvas</div> */}
 
           {/* {tempAvg && tempAvg.avgTemp && (
@@ -641,25 +662,13 @@ function App() {
               offset={true}
             />
           )} */}
-          {accData && tempData && gpsData && (
+          {/* {accData && tempData && gpsData && (
             <IoTMap gps={gpsData} acc={accData} temp={tempData} />
-          )}
-        </div>
+          )} */}
+        {/* </div> */}
       </section>
       <footer>
-        <span> developed by @ehsan__ulhaq</span>
-        <button
-          id="apiInput"
-          style={{
-            border: "0.1rem solid " + (dev ? "var(--text1)" : "var(--theme1)"),
-            color: dev ? "var(--text1)" : "grey",
-          }}
-          onClick={() => {
-            setDev(!dev);
-          }}
-        >
-          dev
-        </button>
+        
       </footer>
     </div>
   );

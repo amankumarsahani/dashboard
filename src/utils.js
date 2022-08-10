@@ -157,7 +157,6 @@ export const genRan = (min, max) => {
 export const hexWithAlpha = (hex, alpha) => `${hex}${alpha}`;
 
 export const NumberAnimated = ({ data, dig = 0 }) => {
-  console.log(data);
   const formatValue = (data) => data.toFixed(dig);
   return <AnimatedNumber value={data} formatValue={formatValue} />;
 };

@@ -34,8 +34,8 @@ const ReactSelect = ({ accOpts, tempOpts, handleChange, them, vw }) => {
     padding: "0.2vw 0.5vw",
     textAlign: "center",
   };
-
   const formatGroupLabel = (data) => (
+  
     <div style={groupStyles}>
       <span>{data.label}</span>
       <span style={groupBadgeStyles}>{data.options.length}</span>
@@ -87,8 +87,8 @@ const ReactSelect = ({ accOpts, tempOpts, handleChange, them, vw }) => {
     <Select
       styles={customStyles}
       defaultValue={{
-        value: "c3:83:0c:de:ae:07",
-        label: "c3:83:0c:de:ae:07",
+        value: "C6:2B:45:5F:71:FD",
+        label: "C6:2B:45:5F:71:FD",
         color: "var(--c4)",
       }}
       options={groupedOptions}
