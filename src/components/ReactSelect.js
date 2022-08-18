@@ -2,6 +2,7 @@ import React from "react";
 import Select from "react-select";
 
 const ReactSelect = ({ accOpts, tempOpts, handleChange, them, vw }) => {
+  
   const colourOptions = accOpts.map((opt) => {
     return { value: opt, label: opt, color: "red" };
   });

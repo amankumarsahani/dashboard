@@ -12,9 +12,10 @@ import {
 import ReactSelect from "./ReactSelect.js";
 
 // const S_KEY = "time_stamp";
-const S_KEY = "time_stmp";
+const S_KEY = "logTime";
 
 export default function Search({
+  apiUrl,apiUrl2,
   url,
   refresh,
   theme,
@@ -27,11 +28,13 @@ export default function Search({
   const [id, setId] = useState("C6:2B:45:5F:71:FD");
   const [searchLim, setSearchLim] = useState(10);
   const [lim, setLim] = useState(10);
+  const [cal,setCal] =useState("");
   const [accOrTempData, setAccOrTempData] = useState("");
-  const [sensor, setSensor] = useState("");
+  const [sensor, setSensor] = useState("acc");
   const [responded, setResponded] = useState(true);
 
   const handleSearchChange = (e) => {
+    setCal(e.color);
     setSearchField(e.value);
     setId(e.value);
   };
@@ -44,10 +47,10 @@ export default function Search({
     setLim(searchLim);
   };
 
-  const handleNewResponse = (response) => {
-    if (sensor === "acc") {
-      if (response.data.accOrTemp[0].Sensor === "Accelerometer") {
-        let atd = makeAccDataFromQuery(response.data.accOrTemp, S_KEY);
+  const handleNewResponse = (responseOne,responseTwo) => {
+    if (sensor === "acc" && cal==='red') {
+      if (responseOne.data) {
+        let atd = makeAccDataFromQuery(responseOne.data, S_KEY);
         if (
           !arrayEquals(atd.dataLabels, accOrTempData.dataLabels) ||
           !arrayEquals(atd.abs, accOrTempData.abs) ||
@@ -57,13 +60,15 @@ export default function Search({
           setAccOrTempData(atd);
         }
       } else {
-        let atd = makeTempDataFromQuery(response.data.accOrTemp, S_KEY);
+        let atd = makeTempDataFromQuery(responseOne.data, S_KEY);
         setSensor("temp");
         setAccOrTempData(atd);
       }
     } else {
-      if (response.data.accOrTemp[0].Sensor === "Temperature") {
-        let atd = makeTempDataFromQuery(response.data.accOrTemp, S_KEY);
+      (cal==='green'?setSensor('temp'):setSensor("acc"));
+
+      if (responseTwo.data) {
+        let atd = makeTempDataFromQuery(responseTwo.data, S_KEY);
         if (
           !arrayEquals(atd.dataLabels, accOrTempData.dataLabels) ||
           !arrayEquals(atd.temp, accOrTempData.temp)
@@ -71,7 +76,7 @@ export default function Search({
           setAccOrTempData(atd);
         }
       } else {
-        let atd = makeAccDataFromQuery(response.data.accOrTemp, S_KEY);
+        let atd = makeAccDataFromQuery(responseTwo.data, S_KEY);
         setSensor("acc");
         setAccOrTempData(atd);
       }
@@ -79,31 +84,70 @@ export default function Search({
   };
   const [prev, setPrev] = useState("C6:2B:45:5F:71:FD");
 
-  useEffect(() => {
+  useEffect(()=>{
+    const reqOne = axios.get(apiUrl + "&sensorId=" + id + "&lim=" + searchLim);
+    const reqTwo = axios.get(apiUrl2 + "&sensorId=" + id + "&lim=" + searchLim);
     setResponded(false);
-    axios.get(url + "?sensorId=" + id + "&lim=" + lim).then((response) => {
-      // console.log(url + "?sensorId=" + id + "&lim=" + lim);
-      // console.log(response);
-      if (response.data!== 0) {
+
+    axios.all([reqOne, reqTwo]).then(axios.spread((...responses) => {
+      const responseOne = responses[0]
+      const responseTwo = responses[1]
+
+      if (responseOne.data!==0 || responseTwo.data!==0) {
         if (!accOrTempData) {
-          if (response.data.accOrTemp[0].Sensor === "Accelerometer") {
+          if (responseOne) {
             setSensor("acc");
             setAccOrTempData(
-              makeAccDataFromQuery(response.data.accOrTemp, S_KEY)
+              makeAccDataFromQuery(responseOne.data, S_KEY)
             );
-          } else if (response.data.accOrTemp[0].Sensor === "Temperature") {
+          } else if (responseTwo) {
             setSensor("temp");
             setAccOrTempData(
-              makeTempDataFromQuery(response.data.accOrTemp, S_KEY)
+              makeTempDataFromQuery(responseTwo.data, S_KEY)
             );
           }
-        } else handleNewResponse(response);
-        setPrev(id);
-        setSearchId(id);
-      } else console.log(`No Historic Data for Device ID: ${id}`);
-      setResponded(true);
-    });
-  }, [id, url, refresh, lim]);
+        }
+        else {
+          handleNewResponse(responseOne,responseTwo);
+          setPrev(id);
+          setSearchId(id);
+        }
+        
+    }
+    else {console.log(`No Historic Data for Device ID: ${id}`);
+        setResponded(true);}
+  }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[refresh, apiUrl,apiUrl2])
+
+  /////////////
+  // useEffect(() => {
+  //   setResponded(false);
+  //   axios.get(url + "?sensorId=" + id + "&lim=" + lim).then((response) => {
+  //     // console.log(url + "?sensorId=" + id + "&lim=" + lim);
+  //     console.log(response);
+  //     if (response.data!== 0) {
+  //       console.log(!accOrTempData);
+  //       console.log(response.data.accOrTemp[0].Sensor);
+  //       if (!accOrTempData) {
+  //         if (response.data.accOrTemp[0].Sensor === "Accelerometer") {
+  //           setSensor("acc");
+  //           setAccOrTempData(
+  //             makeAccDataFromQuery(response.data.accOrTemp, S_KEY)
+  //           );
+  //         } else if (response.data.accOrTemp[0].Sensor === "Temperature") {
+  //           setSensor("temp");
+  //           setAccOrTempData(
+  //             makeTempDataFromQuery(response.data.accOrTemp, S_KEY)
+  //           );
+  //         }
+  //       } else handleNewResponse(response);
+  //       setPrev(id);
+  //       setSearchId(id);
+  //     } else console.log(`No Historic Data for Device ID: ${id}`);
+  //     setResponded(true);
+  //   });
+  // }, [id, url, refresh, lim]);
 
   document.getElementById("lim") &&
     (document.getElementById("lim").oninput = function () {
@@ -116,7 +160,8 @@ export default function Search({
         "%, #fff 100%)";
     });
 
-  return (
+
+    return (
     <div id="SearchContainer">
       <div className="searchResult">
         {!accOrTempData.dataLabels && <Loading theme={theme} />}
@@ -197,7 +242,7 @@ export default function Search({
               value={searchLim}
               onChange={handleLimChange}
             />
-            <span id="limCounter">{lim}</span>
+            <span id="limCounter">{searchLim}</span>
           </div>
           {/* <input
             id="searchFormInput"

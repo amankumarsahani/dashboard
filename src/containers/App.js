@@ -84,11 +84,11 @@ function App() {
     let avgY = 0;
     let avgZ = 0;
     let avgAbs = 0;
-
     // accData.dataX.forEach((x) => (avgX+= parseFloat(x)));
-    accData.dataX.forEach((x,i)=>{ if(!isNaN(x)){avgX += x;}})
-    accData.dataY.forEach((y) => { if(!isNaN(y)){avgY += y;}});
-    accData.dataZ.forEach((z) => { if(!isNaN(z)){avgZ += z;}});
+    // console.log(accData)
+    accData.abs.forEach((x,i)=>{ if(!isNaN(x)){avgX += parseFloat(x);}})
+    accData.dataY.forEach((y) => { if(!isNaN(y)){avgY += parseFloat(y);}});
+    accData.dataZ.forEach((z) => { if(!isNaN(z)){avgZ += parseFloat(z);}});
     accData.abs.forEach((abs) => { if(!isNaN(abs)){avgAbs += abs;}});
 
     setAccAvg({
@@ -133,10 +133,12 @@ function App() {
     };
   }, [interv, refresh]);
 
-  const handleNewResponse = (response) => {
-    let ad = makeAccData(response.data);
-    let td = makeTempData(response.data); 
-    let gps = makeGpsData(response.data, response.data); 
+  const handleNewResponse = (responseOne,responseTwo) => {
+    let ad = makeAccData(responseOne.data);
+    
+
+    let td = makeTempData(responseTwo.data); 
+    let gps = makeGpsData(responseOne.data, responseTwo.data); 
 
     if (
       !arrayEquals(ad.dataLabels, accData.dataLabels) ||
@@ -145,6 +147,7 @@ function App() {
       !arrayEquals(ad.dataZ, accData.dataZ)
     ) {
       setAccData(ad);
+      console.log(accData);
     }
     if (
       !arrayEquals(td.dataLabels, tempData.dataLabels) ||
@@ -156,7 +159,7 @@ function App() {
       !arrayEquals(gps.acc, gpsData.acc) ||
       !arrayEquals(gps.temp, gpsData.temp)
     ) {
-      setGpsData(makeGpsData(response.data, response.data));
+      setGpsData(makeGpsData(responseOne.data, responseTwo.data));
     }
   };
 
@@ -168,18 +171,17 @@ function App() {
       const responseOne = responses[0]
       const responseTwo = responses[1]
 
-      console.log("1",responseOne);
-      console.log("2",responseTwo);
+      // console.log("1",responseOne);
+      // console.log("2",responseTwo);
 
       if (!accData || !tempData) {
         if (!accData) setAccData(makeAccData(responseOne.data));
-        if (!tempData) setTempData(makeTempData(responseTwo.data)); //response.data
+        if (!tempData) setTempData(makeTempData(responseTwo.data));
         if (!gpsData)
-          setGpsData(makeGpsData(responseOne.data, responseTwo.data));  //response.data
+          setGpsData(makeGpsData(responseOne.data, responseTwo.data));  
       } 
       else 
-        handleNewResponse(responseOne);
-        handleNewResponse(responseTwo);
+        handleNewResponse(responseOne,responseTwo);
     })).catch(errors => {
       console.log(errors);
     })
@@ -220,6 +222,7 @@ function App() {
     }
   };
   const [aaa, setAaa] = useState(0);
+  
   return (
     <div className={`App ${theme ? "dark" : "light"}`}>
       <header className="App-header">
@@ -435,6 +438,8 @@ function App() {
         </div>
         <div id="g2">
           <Search
+            apiUrl={apiUrl}
+            apiUrl2={apiUrl2}
             url={apiUrl}
             refresh={refresh}
             theme={theme}
@@ -551,6 +556,7 @@ function App() {
             </span>
             <span id="x">X-axis : &nbsp; &nbsp; &nbsp; &nbsp;</span>
             <span id="xc" className="computed">
+            {/* {console.log(accAvg.avgX)} */}
               {avgOrSel ? accAvg.avgX && accAvg.avgX[0].toFixed(3) : accPoint.x}{" "}
               m/s{"\u00b2"}
             </span>

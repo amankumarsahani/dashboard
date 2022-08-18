@@ -33,9 +33,12 @@ export function makeTempDataFromQuery(
 ) {
   arr.sort((a, b) => timeDateSorter(a, b, sortKey));
   let dataLabels = [];
+  
   let temp = [];
   for (let i = 0; i < arr.length; i++) {
-    dataLabels.push(moment(toDate(arr[i][xKey])).format("lll"));
+    let str=(arr[i][xKey]).slice(0,(arr[i][xKey]).search(' IST'));
+    dataLabels.push(moment(str).format("lll"));
+
     temp.push(Math.abs(arr[i].temp) > 100 ? 0 : arr[i].temp);
   }
   return { dataLabels, temp };
@@ -77,25 +80,24 @@ export function makeAccDataFromQuery(
   let dataY = [];
   let dataZ = [];
   let abs = [];
-  for (let i = 0; i < arr.length; i++) {
-    dataLabels.push(moment(toDate(arr[i][xKey])).format("lll"));
 
+  for (let i = 0; i < arr.length; i++) {
+    let str=(arr[i][xKey]).slice(0,(arr[i][xKey]).search(' IST'));
+    dataLabels.push(moment(str).format("lll"));
     // dataLabels.push(
     //   moment(toDate(arr[i][xKey])).format("MMM Do YY") +
     //     " " +
     //     moment(toDate(arr[i][xKey])).format("LTS")
     // );
 
-    let val = arr[i][retKey];
-    val = val.split(",");
-    dataX.push(val[0]);
-    dataY.push(val[1]);
-    dataZ.push(val[2]);
-    let x = Math.pow(
-      Math.pow(val[0], 2) + Math.pow(val[1], 2) + Math.pow(val[2], 2),
+    dataX.push(arr[i].x);
+    dataY.push(arr[i].y);
+    dataZ.push(arr[i].z);
+    let tst = Math.pow(
+      Math.pow(arr[i].x, 2) + Math.pow(arr[i].y, 2) + Math.pow(arr[i].z, 2),
       0.5
     );
-    abs.push(x);
+    abs.push(tst);
   }
   return { dataLabels, dataX, dataY, dataZ, abs };
 }
